@@ -1,7 +1,6 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useWeddingData, useGuest } from "@/hooks/use-wedding-data";
-import { usePreloadImages } from "@/hooks/use-preload-images";
 import { FloatingPetals } from "@/components/ui/FloatingPetals";
 import { SparkleField } from "@/components/ui/SparkleField";
 import { OrnamentDivider } from "@/components/ui/OrnamentDivider";
@@ -79,8 +78,6 @@ const WeddingDetail = () => {
       colors: weddingData.textColors,
     });
   }, [weddingData, activeThemeId]);
-
-  usePreloadImages(weddingData?.photos);
 
   // Set animation speed CSS variable whenever speedMultiplier changes
   const speedMultiplier =

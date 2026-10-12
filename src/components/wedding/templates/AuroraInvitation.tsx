@@ -382,7 +382,7 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
                   key={i}
                   className={cn("mo-card mo-reveal", i % 2 ? "mo-card-b" : "mo-card-a")}>
                   <div className="mo-card-frame">
-                    <img src={src} alt="" decoding="async" loading="eager" draggable={false} />
+                    <img src={src} alt="" decoding="async" loading="lazy" draggable={false} />
                   </div>
                   <figcaption>{String(i + 1).padStart(2, "0")}</figcaption>
                 </figure>
