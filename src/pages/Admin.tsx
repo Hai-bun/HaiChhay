@@ -1621,7 +1621,7 @@ const Admin = () => {
               <CardHeader>
                 <CardTitle className="font-serif">Invitation Message</CardTitle>
                 <CardDescription>
-                  Formal invitation wording and the full date line (e.g. Khmer lunar date)
+                  Formal wording and the full date line, shown inside The Couple section (e.g. Khmer lunar date)
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">

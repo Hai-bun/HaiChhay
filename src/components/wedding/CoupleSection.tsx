@@ -1,6 +1,7 @@
 import { FitText } from "@/components/ui/FitText";
 import { OrnamentDivider } from "@/components/ui/OrnamentDivider";
 import { Heart } from "lucide-react";
+import type { InvitationMessageConfig } from "@/lib/weddingStore";
 import { getTranslations, Language, getStoredLanguage } from "@/lib/i18n";
 
 interface CoupleSectionProps {
@@ -12,6 +13,7 @@ interface CoupleSectionProps {
   brideNameKh?: string;
   groomParentsKh?: string;
   brideParentsKh?: string;
+  message?: InvitationMessageConfig;
   language?: Language;
 }
 
@@ -24,6 +26,7 @@ export const CoupleSection = ({
   brideNameKh,
   groomParentsKh,
   brideParentsKh,
+  message,
   language,
 }: CoupleSectionProps) => {
   const lang = language || getStoredLanguage();
@@ -46,6 +49,15 @@ export const CoupleSection = ({
     lang === "km" && brideParentsKh ? brideParentsKh : brideParents,
   );
 
+  // Optional formal invitation wording (Admin → Message), shown inside this section.
+  const km = lang === "km";
+  const pick = (en?: string, kh?: string) =>
+    (km && kh?.trim() ? kh : en)?.trim() || kh?.trim() || "";
+  const msgOn = !!message?.enabled;
+  const msgTitle = msgOn ? pick(message?.title, message?.titleKh) : "";
+  const msgBody = msgOn ? pick(message?.body, message?.bodyKh) : "";
+  const msgDate = msgOn ? pick(message?.dateLine, message?.dateLineKh) : "";
+
   return (
     <section id="couple" className="couple-section scroll-reveal py-16 px-4 text-center bg-romantic-gradient">
       <div className="max-w-4xl mx-auto">
@@ -54,6 +66,21 @@ export const CoupleSection = ({
         </p>
 
         <OrnamentDivider className="mb-8" />
+
+        {(msgTitle || msgBody) && (
+          <div className="couple-message max-w-xl mx-auto mb-10 animate-fade-in-up">
+            {msgTitle && (
+              <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-foreground mb-4">
+                {msgTitle}
+              </h2>
+            )}
+            {msgBody && (
+              <p className="text-muted-foreground leading-relaxed whitespace-pre-line font-serif text-lg">
+                {msgBody}
+              </p>
+            )}
+          </div>
+        )}
 
         <div className="couple-grid grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           {/* Groom */}
@@ -90,6 +117,12 @@ export const CoupleSection = ({
             </p>
           </div>
         </div>
+
+        {msgDate && (
+          <p className="couple-date max-w-xl mx-auto mt-10 text-foreground leading-relaxed whitespace-pre-line font-serif text-lg font-semibold">
+            {msgDate}
+          </p>
+        )}
 
         {/* Heart Divider - visible on desktop */}
         <div className="couple-heart hidden md:flex justify-center mt-8">

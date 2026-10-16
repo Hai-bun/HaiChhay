@@ -48,6 +48,7 @@ export const ReelInvitation = ({
         brideNameKh={weddingData.brideNameKh}
         groomParentsKh={weddingData.groomParentsKh}
         brideParentsKh={weddingData.brideParentsKh}
+        message={weddingData.invitationMessage}
         language={language}
       />
     ),
