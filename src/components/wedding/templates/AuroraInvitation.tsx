@@ -3,7 +3,7 @@ import { Calendar, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Guest, WeddingData } from "@/lib/weddingStore";
 import { getTranslations, type Language } from "@/lib/i18n";
-import { formatWeddingDate, formatWeddingTime } from "@/lib/weddingFormat";
+import { formatWeddingDate, formatWeddingTime, localizeDigits } from "@/lib/weddingFormat";
 import { CountdownTimer } from "../CountdownTimer";
 import { PhotoGallery } from "../PhotoGallery";
 import { TemplateSections, getCoupleDisplay, type SectionKey } from "./TemplateSections";
@@ -324,7 +324,7 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
               <span>
                 {dateText}
                 {" · "}
-                {formatWeddingTime(weddingData.weddingTime)}
+                {formatWeddingTime(weddingData.weddingTime, language)}
               </span>
             </div>
 
@@ -365,7 +365,7 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
                   <div className="mo-card-frame">
                     <img src={src} alt="" decoding="async" loading="lazy" draggable={false} />
                   </div>
-                  <figcaption>{String(i + 1).padStart(2, "0")}</figcaption>
+                  <figcaption>{localizeDigits(String(i + 1).padStart(2, "0"), language)}</figcaption>
                 </figure>
               ))}
             </div>

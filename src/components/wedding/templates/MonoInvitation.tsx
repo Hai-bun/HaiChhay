@@ -31,7 +31,7 @@ export const MonoInvitation = ({
         <div className="max-w-4xl mx-auto w-full">
           <div className="mono-top">
             <span>{t.weInviteYou}</span>
-            <span>{formatWeddingTime(weddingData.weddingTime)}</span>
+            <span>{formatWeddingTime(weddingData.weddingTime, language)}</span>
           </div>
           <div className="mono-rule" />
 

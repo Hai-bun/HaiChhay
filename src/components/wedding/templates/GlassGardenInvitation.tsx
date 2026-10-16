@@ -105,7 +105,7 @@ export const GlassGardenInvitation = ({
             <span>
               {formatWeddingDate(weddingData.weddingDate, language)}
               {" · "}
-              {formatWeddingTime(weddingData.weddingTime)}
+              {formatWeddingTime(weddingData.weddingTime, language)}
             </span>
           </div>
 
@@ -125,7 +125,7 @@ export const GlassGardenInvitation = ({
       <section className="glass-cal-section scroll-reveal py-16 px-4">
         <div className="glass-card glass-card-flat max-w-sm mx-auto text-center px-6 py-10">
           <p className="glass-tag mb-1">{t.countingDown}</p>
-          <MonthCalendar dateStr={weddingData.weddingDate} />
+          <MonthCalendar dateStr={weddingData.weddingDate} language={language} />
         </div>
       </section>
 

@@ -362,7 +362,7 @@ const WeddingDetail = () => {
             <Calendar className="w-5 h-5" />
             <p className="font-serif text-lg">
               {formatWeddingDate(weddingData.weddingDate, language)} at{" "}
-              {formatWeddingTime(weddingData.weddingTime)}
+              {formatWeddingTime(weddingData.weddingTime, language)}
             </p>
           </div>
 

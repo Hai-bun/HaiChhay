@@ -1,6 +1,12 @@
 import { cn } from "@/lib/utils";
+import { toKhmerDigits } from "@/lib/weddingFormat";
 
-const pad = (n: number): string => String(n).padStart(2, "0");
+const pad = (n: number): string => {
+  const text = String(n).padStart(2, "0");
+  return typeof document !== "undefined" && document.documentElement.lang === "km"
+    ? toKhmerDigits(text)
+    : text;
+};
 
 interface ReelFrameProps {
   /** Chapter titles, in running order — drives the rail labels. */

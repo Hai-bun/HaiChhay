@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { localizeDigits } from "@/lib/weddingFormat";
 import { getTranslations, Language, getStoredLanguage } from "@/lib/i18n";
 
 interface CountdownTimerProps {
@@ -44,7 +45,7 @@ export const CountdownTimer = ({ targetDate, targetTime, language }: CountdownTi
     <div className="flex flex-col items-center">
       <div className="countdown-box w-16 h-16 sm:w-20 sm:h-20 bg-card rounded-lg shadow-card flex items-center justify-center border border-border">
         <span className="text-2xl sm:text-3xl font-serif font-semibold text-foreground">
-          {value.toString().padStart(2, '0')}
+          {localizeDigits(value.toString().padStart(2, '0'), lang)}
         </span>
       </div>
       <span className={`mt-2 text-xs sm:text-sm text-muted-foreground ${lang === "km" ? "" : "uppercase tracking-widest"}`}>

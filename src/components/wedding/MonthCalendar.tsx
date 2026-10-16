@@ -1,5 +1,7 @@
 import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { Language } from "@/lib/i18n";
+import { localizeDigits } from "@/lib/weddingFormat";
 
 const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 const MONTHS = [
@@ -7,9 +9,22 @@ const MONTHS = [
   "July", "August", "September", "October", "November", "December",
 ];
 
+const WEEKDAYS_KH = ["ច", "អ", "ព", "ព្រ", "សុ", "ស", "អា"];
+const MONTHS_KH = [
+  "មករា", "កុម្ភៈ", "មីនា", "មេសា", "ឧសភា", "មិថុនា",
+  "កក្កដា", "សីហា", "កញ្ញា", "តុលា", "វិច្ឆិកា", "ធ្នូ",
+];
+
 // A small month view of the wedding month with the wedding day highlighted.
 // Takes a plain "YYYY-MM-DD" string and does no timezone math.
-export const MonthCalendar = ({ dateStr }: { dateStr: string }) => {
+export const MonthCalendar = ({
+  dateStr,
+  language,
+}: {
+  dateStr: string;
+  language?: Language;
+}) => {
+  const km = language === "km";
   const parts = (dateStr || "").split("-").map(Number);
   if (parts.length < 3 || parts.some((n) => Number.isNaN(n))) return null;
   const [year, month, day] = parts; // month is 1-12
@@ -26,10 +41,10 @@ export const MonthCalendar = ({ dateStr }: { dateStr: string }) => {
   return (
     <div className="month-calendar">
       <p className="month-calendar-title">
-        {MONTHS[month - 1]} {year}
+        {km ? MONTHS_KH[month - 1] : MONTHS[month - 1]} {localizeDigits(year, language)}
       </p>
       <div className="month-calendar-grid">
-        {WEEKDAYS.map((w) => (
+        {(km ? WEEKDAYS_KH : WEEKDAYS).map((w) => (
           <span key={w} className="month-calendar-wd">
             {w}
           </span>
@@ -44,7 +59,7 @@ export const MonthCalendar = ({ dateStr }: { dateStr: string }) => {
             {c === day ? (
               <Heart className="w-4 h-4" fill="currentColor" />
             ) : (
-              c ?? ""
+              c === null ? "" : localizeDigits(c, language)
             )}
           </span>
         ))}

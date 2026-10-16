@@ -105,7 +105,7 @@ export const CuteInvitation = ({
             <span>
               {formatWeddingDate(weddingData.weddingDate, language)}
               {" · "}
-              {formatWeddingTime(weddingData.weddingTime)}
+              {formatWeddingTime(weddingData.weddingTime, language)}
             </span>
           </div>
 

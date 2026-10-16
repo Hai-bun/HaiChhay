@@ -25,6 +25,18 @@ const KHMER_MONTHS = [
   "ធ្នូ",
 ];
 
+const KHMER_DIGITS = "០១២៣៤៥៦៧៨៩";
+
+/** Replaces every 0-9 in a string/number with the Khmer numeral. */
+export const toKhmerDigits = (value: string | number): string =>
+  String(value).replace(/\d/g, (d) => KHMER_DIGITS[Number(d)]);
+
+/** Khmer numerals when the guest chose Khmer, otherwise the text unchanged. */
+export const localizeDigits = (
+  value: string | number,
+  language?: Language,
+): string => (language === "km" ? toKhmerDigits(value) : String(value));
+
 /** Long-form wedding date, localised to the guest's chosen language. */
 export const formatWeddingDate = (
   dateStr: string,
@@ -36,17 +48,21 @@ export const formatWeddingDate = (
 
   if (language === "km") {
     try {
-      return new Intl.DateTimeFormat("km-KH", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }).format(date);
+      return toKhmerDigits(
+        new Intl.DateTimeFormat("km-KH", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }).format(date),
+      );
     } catch {
       // Fallback: manual Khmer month/weekday names
-      return `${KHMER_WEEKDAYS[date.getDay()]} ${date.getDate()} ${
-        KHMER_MONTHS[date.getMonth()]
-      } ${date.getFullYear()}`;
+      return toKhmerDigits(
+        `${KHMER_WEEKDAYS[date.getDay()]} ${date.getDate()} ${
+          KHMER_MONTHS[date.getMonth()]
+        } ${date.getFullYear()}`,
+      );
     }
   }
 
@@ -59,10 +75,18 @@ export const formatWeddingDate = (
 };
 
 /** Turns a stored "HH:mm" value into a 12-hour display time. */
-export const formatWeddingTime = (timeStr: string): string => {
+export const formatWeddingTime = (
+  timeStr: string,
+  language?: Language,
+): string => {
   const [hours, minutes] = timeStr.split(":");
   const hour = parseInt(hours);
-  const ampm = hour >= 12 ? "PM" : "AM";
   const hour12 = hour % 12 || 12;
+  if (language === "km") {
+    // ព្រឹក = morning, រសៀល = afternoon, ល្ងាច = evening/night
+    const period = hour < 12 ? "ព្រឹក" : hour < 18 ? "រសៀល" : "ល្ងាច";
+    return `${toKhmerDigits(`${hour12}:${minutes}`)} ${period}`;
+  }
+  const ampm = hour >= 12 ? "PM" : "AM";
   return `${hour12}:${minutes} ${ampm}`;
 };

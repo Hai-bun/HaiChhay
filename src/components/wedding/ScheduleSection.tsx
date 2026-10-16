@@ -1,7 +1,7 @@
 import { Clock } from "lucide-react";
 import type { ScheduleConfig } from "@/lib/weddingStore";
 import { getTranslations, type Language, getStoredLanguage } from "@/lib/i18n";
-import { formatWeddingTime } from "@/lib/weddingFormat";
+import { formatWeddingTime, localizeDigits } from "@/lib/weddingFormat";
 
 interface ScheduleSectionProps {
   schedule: ScheduleConfig;
@@ -9,8 +9,10 @@ interface ScheduleSectionProps {
 }
 
 // Renders "HH:mm" as a 12-hour time, but leaves any other free-text as-is.
-const displayTime = (time: string): string =>
-  /^\d{1,2}:\d{2}$/.test(time.trim()) ? formatWeddingTime(time.trim()) : time;
+const displayTime = (time: string, lang: Language): string =>
+  /^\d{1,2}:\d{2}$/.test(time.trim())
+    ? formatWeddingTime(time.trim(), lang)
+    : localizeDigits(time, lang);
 
 export const ScheduleSection = ({ schedule, language }: ScheduleSectionProps) => {
   const lang = language || getStoredLanguage();
@@ -58,14 +60,14 @@ export const ScheduleSection = ({ schedule, language }: ScheduleSectionProps) =>
                 {/* Content */}
                 <div className="pb-8">
                   <p className="font-serif text-lg font-semibold text-primary leading-none">
-                    {displayTime(item.time)}
+                    {displayTime(item.time, lang)}
                   </p>
                   <h3 className="font-serif text-lg font-semibold text-foreground mt-1.5">
-                    {itemTitle}
+                    {localizeDigits(itemTitle, lang)}
                   </h3>
                   {itemDesc?.trim() && (
                     <p className="text-sm text-muted-foreground mt-1">
-                      {itemDesc}
+                      {localizeDigits(itemDesc, lang)}
                     </p>
                   )}
                 </div>

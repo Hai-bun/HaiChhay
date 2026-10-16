@@ -83,7 +83,7 @@ export const EditorialInvitation = ({
                   "editorial-time mt-8",
                   fade("animate-fade-in-up delay-500"),
                 )}>
-                {formatWeddingTime(weddingData.weddingTime)} &middot;{" "}
+                {formatWeddingTime(weddingData.weddingTime, language)} &middot;{" "}
                 {weddingData.eventTitle}
               </p>
             </div>

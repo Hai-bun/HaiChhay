@@ -195,7 +195,7 @@ export const ReelInvitation = ({
             <p className="font-serif tracking-[0.12em]">
               {formatWeddingDate(weddingData.weddingDate, language)}
               {" · "}
-              {formatWeddingTime(weddingData.weddingTime)}
+              {formatWeddingTime(weddingData.weddingTime, language)}
             </p>
           </div>
 
