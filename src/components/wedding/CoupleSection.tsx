@@ -67,21 +67,6 @@ export const CoupleSection = ({
 
         <OrnamentDivider className="mb-8" />
 
-        {(msgTitle || msgBody) && (
-          <div className="couple-message max-w-xl mx-auto mb-10 animate-fade-in-up">
-            {msgTitle && (
-              <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-foreground mb-4">
-                {msgTitle}
-              </h2>
-            )}
-            {msgBody && (
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-line font-serif text-lg">
-                {msgBody}
-              </p>
-            )}
-          </div>
-        )}
-
         <div className="couple-grid grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           {/* Groom */}
           <div className="couple-person couple-groom min-w-0 animate-fade-in-up delay-200">
@@ -118,8 +103,23 @@ export const CoupleSection = ({
           </div>
         </div>
 
+        {(msgTitle || msgBody) && (
+          <div className="couple-message max-w-xl mx-auto mt-10 mb-0 animate-fade-in-up">
+            {msgTitle && (
+              <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-foreground mb-4">
+                {msgTitle}
+              </h2>
+            )}
+            {msgBody && (
+              <p className="text-muted-foreground leading-relaxed whitespace-pre-line font-serif text-lg">
+                {msgBody}
+              </p>
+            )}
+          </div>
+        )}
+
         {msgDate && (
-          <p className="couple-date max-w-xl mx-auto mt-10 text-foreground leading-relaxed whitespace-pre-line font-serif text-lg font-semibold">
+          <p className="couple-date max-w-xl mx-auto mt-6 text-foreground leading-relaxed whitespace-pre-line font-serif text-lg font-semibold">
             {msgDate}
           </p>
         )}
