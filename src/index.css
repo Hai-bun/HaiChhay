@@ -2581,15 +2581,12 @@
 /* ---- Photo ribbons ---- */
 .mo-ribbons { background: #2a0f22; padding: 0.75rem 0; overflow: hidden; display: grid; gap: 0.75rem; }
 .mo-ribbon { overflow: hidden; }
-.mo-ribbon-track { display: flex; gap: 0.75rem; width: max-content; animation: mo-ribbon 60s linear infinite; }
-.mo-ribbon-rev .mo-ribbon-track { animation-direction: reverse; animation-duration: 75s; }
-.mo-ribbon:hover .mo-ribbon-track { animation-play-state: paused; }
+.mo-ribbon-track { display: flex; gap: 0.75rem; padding: 0 0.75rem; }
 .mo-ribbon img {
-  height: clamp(110px, 22vw, 190px); width: auto; aspect-ratio: 4 / 3; object-fit: cover;
-  border-radius: 18px; flex: none; transition: transform 0.5s ease, filter 0.5s ease; filter: saturate(0.9);
+  flex: 1 1 0; min-width: 0; height: clamp(90px, 18vw, 190px); width: 100%; object-fit: cover;
+  border-radius: 18px; transition: transform 0.5s ease, filter 0.5s ease; filter: saturate(0.9);
 }
 .mo-ribbon img:hover { transform: scale(1.06) rotate(-1.5deg); filter: saturate(1.2); }
-@keyframes mo-ribbon { to { transform: translateX(-50%); } }
 
 /* ---- Pinned horizontal gallery ---- */
 .mo-gallery { position: relative; background: linear-gradient(180deg, hsl(30 60% 97%), hsl(8 80% 94%)); }
