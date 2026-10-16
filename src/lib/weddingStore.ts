@@ -152,6 +152,9 @@ export interface WeddingData {
   // Wedding Day Schedule
   schedule: ScheduleConfig;
 
+  // Formal invitation message + full date line
+  invitationMessage: InvitationMessageConfig;
+
   // Animations
   animations: AnimationSettings;
 }
@@ -160,6 +163,16 @@ export interface StoryConfig {
   enabled: boolean;
   title: string;
   text: string;
+}
+
+export interface InvitationMessageConfig {
+  enabled: boolean;
+  title: string;
+  titleKh?: string;
+  body: string;
+  bodyKh?: string;
+  dateLine: string;
+  dateLineKh?: string;
 }
 
 export interface ScheduleItem {
@@ -261,6 +274,16 @@ const DEFAULT_WEDDING_DATA: WeddingData = {
     enabled: false,
     title: "Our Love Story",
     text: "From the moment our paths first crossed, we knew our hearts were meant to walk together. Through laughter, small adventures, and quiet moments, our love grew stronger each day. Now, surrounded by the people we cherish most, we can't wait to begin this new chapter as one.",
+  },
+  invitationMessage: {
+    enabled: false,
+    title: "Wedding Invitation",
+    titleKh: "សេចក្តីអញ្ជើញ",
+    body: "",
+    bodyKh: "",
+    dateLine: "Sunday, 15 November 2026 at 4:00 PM",
+    dateLineKh:
+      "ថ្ងៃអាទិត្យ ៦កើត ខែកត្តិក ឆ្នាំមមី អដ្ឋស័ក ពុទ្ធសករាជ ២៥៧០ ត្រូវនឹងថ្ងៃទី១៥ ខែវិច្ឆិកា ឆ្នាំ២០២៦ វេលាម៉ោង ៤:០០រសៀល",
   },
   schedule: {
     enabled: false,
@@ -400,6 +423,7 @@ const buildWeddingProfileRow = (
     message: weddingData.welcomePopupMessage,
     story: weddingData.story,
     schedule: weddingData.schedule,
+    invitationMessage: weddingData.invitationMessage,
     nameFont: weddingData.nameFont,
     customFonts: weddingData.customFonts,
     galleryLayout: weddingData.galleryLayout,
@@ -522,6 +546,9 @@ const mapProfileToWeddingData = (
     schedule:
       (profile.welcome_popup as { schedule?: ScheduleConfig })?.schedule ??
       DEFAULT_WEDDING_DATA.schedule,
+    invitationMessage:
+      (profile.welcome_popup as { invitationMessage?: InvitationMessageConfig })
+        ?.invitationMessage ?? DEFAULT_WEDDING_DATA.invitationMessage,
     animations: profile.animations ?? DEFAULT_WEDDING_DATA.animations,
   };
 };
