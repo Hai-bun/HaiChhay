@@ -253,6 +253,8 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
     };
   }, [animOn, photos.length, customLayout]);
 
+  const rowA = photos.slice(0, 6);
+  const rowB = [...rowA].reverse();
 
   return (
     <div ref={shellRef} className={cn("mo-shell", language === "km" && "mo-km")}>
@@ -340,6 +342,21 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
           </div>
         </div>
       </section>
+
+      {/* ---------- Two static photo rows ---------- */}
+      {photos.length > 0 && (
+        <div className="mo-ribbons" aria-hidden="true">
+          {[rowA, rowB].map((row, r) => (
+            <div key={r} className={cn("mo-ribbon", r === 1 && "mo-ribbon-rev")}>
+              <div className="mo-ribbon-track">
+                {row.map((src, i) => (
+                  <img key={i} src={src} alt="" loading="lazy" draggable={false} />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* ---------- Content sections (flat editorial cards, no glass) ---------- */}
       <TemplateSections

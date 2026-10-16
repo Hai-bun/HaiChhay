@@ -9,7 +9,6 @@ import { CoupleSection } from "@/components/wedding/CoupleSection";
 import { MonogramSection } from "@/components/wedding/MonogramSection";
 import { StorySection } from "@/components/wedding/StorySection";
 import { ScheduleSection } from "@/components/wedding/ScheduleSection";
-import { InvitationMessageSection } from "@/components/wedding/InvitationMessageSection";
 import { LocationSection } from "@/components/wedding/LocationSection";
 import { PhotoGallery } from "@/components/wedding/PhotoGallery";
 import { RSVPSection } from "@/components/wedding/RSVPSection";
@@ -395,8 +394,6 @@ const WeddingDetail = () => {
 
       {/* Wedding monogram / crest (if uploaded) */}
       <MonogramSection image={weddingData.monogramImage} language={language} />
-
-      <InvitationMessageSection message={weddingData.invitationMessage} language={language} />
 
       {/* Couple & Family Section */}
       <CoupleSection

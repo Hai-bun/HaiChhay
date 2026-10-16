@@ -5,7 +5,6 @@ import { CoupleSection } from "../CoupleSection";
 import { MonogramSection } from "../MonogramSection";
 import { StorySection } from "../StorySection";
 import { ScheduleSection } from "../ScheduleSection";
-import { InvitationMessageSection } from "../InvitationMessageSection";
 import { LocationSection } from "../LocationSection";
 import { PhotoGallery } from "../PhotoGallery";
 import { GiftSection } from "../GiftSection";
@@ -113,9 +112,6 @@ export const TemplateSections = ({
   return (
     <>
       {showMonogram && <MonogramSection image={weddingData.monogramImage} language={language} />}
-      {showMonogram && (
-        <InvitationMessageSection message={weddingData.invitationMessage} language={language} />
-      )}
       {order.map((key) => (
         <Fragment key={key}>{nodes[key]}</Fragment>
       ))}
