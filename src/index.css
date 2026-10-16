@@ -3050,3 +3050,33 @@ html[data-names-color] .wedding-root :is(.font-script, .couple-name, .mo-name, .
 .mo-reveal { will-change: opacity, transform; }
 .mo-reveal.is-in { will-change: auto; }
 img { image-rendering: auto; }
+
+/* ==============================================================
+   Aurora hero — glossy embossed gold title (Khmer wedding-card look)
+   ============================================================== */
+.mo-name .mo-char {
+  background: linear-gradient(180deg, #fff4c2 0%, #f5cf6b 28%, #c98f1f 52%, #f3d27a 74%, #9b6510 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+.mo-name {
+  text-shadow: none;
+}
+.mo-name {
+  filter: drop-shadow(0 1px 0 rgba(255, 240, 190, 0.7)) drop-shadow(0 3px 2px rgba(80, 45, 0, 0.55))
+    drop-shadow(0 8px 14px rgba(0, 0, 0, 0.35));
+}
+.mo-km .mo-name { font-family: "Moul", "Noto Serif Khmer", serif; font-weight: 400; line-height: 1.5; }
+.mo-name .mo-amp {
+  background: none;
+  -webkit-text-fill-color: #f5cf6b;
+  color: #f5cf6b;
+}
+.mo-kicker {
+  color: #f5cf6b;
+  text-shadow: 0 1px 2px rgba(60, 30, 0, 0.7);
+  opacity: 1;
+}
+.mo-km .mo-kicker { font-family: "Moul", "Noto Serif Khmer", serif; font-size: 0.8rem; }

@@ -35,6 +35,7 @@ import {
   Sparkles,
   Clock,
   BookHeart,
+  ScrollText,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -521,6 +522,12 @@ const Admin = () => {
               className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
               <Clock className="w-4 h-4 mr-2" />
               <span className="hidden sm:inline">Schedule</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="invitation"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <ScrollText className="w-4 h-4 mr-2" />
+              <span className="hidden sm:inline">Message</span>
             </TabsTrigger>
             <TabsTrigger
               value="date"
@@ -1608,6 +1615,66 @@ const Admin = () => {
             </Card>
           </TabsContent>
 
+          {/* Invitation Message Tab */}
+          <TabsContent value="invitation">
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-serif">Invitation Message</CardTitle>
+                <CardDescription>
+                  Formal invitation wording and the full date line (e.g. Khmer lunar date)
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex items-center space-x-3">
+                  <Switch
+                    id="invitationEnabled"
+                    checked={data.invitationMessage.enabled}
+                    onCheckedChange={(checked) =>
+                      setData({
+                        ...data,
+                        invitationMessage: { ...data.invitationMessage, enabled: checked },
+                      })
+                    }
+                  />
+                  <Label htmlFor="invitationEnabled">Show the invitation message</Label>
+                </div>
+
+                {data.invitationMessage.enabled && (
+                  <div className="space-y-5">
+                    {(
+                      [
+                        ["title", "titleKh", "Title", false],
+                        ["body", "bodyKh", "Message", true],
+                        ["dateLine", "dateLineKh", "Date line", true],
+                      ] as const
+                    ).map(([en, kh, label, multi]) => {
+                      const Field = multi ? Textarea : Input;
+                      const set = (key: typeof en | typeof kh, value: string) =>
+                        setData({
+                          ...data,
+                          invitationMessage: { ...data.invitationMessage, [key]: value },
+                        });
+                      return (
+                        <div key={en} className="space-y-2">
+                          <Label>{label} (English)</Label>
+                          <Field
+                            value={data.invitationMessage[en] ?? ""}
+                            onChange={(e) => set(en, e.target.value)}
+                          />
+                          <Label>{label} (ភាសាខ្មែរ)</Label>
+                          <Field
+                            value={data.invitationMessage[kh] ?? ""}
+                            onChange={(e) => set(kh, e.target.value)}
+                            placeholder="ភាសាខ្មែរ"
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
           {/* Date Tab */}
           <TabsContent value="date">
             <Card>
