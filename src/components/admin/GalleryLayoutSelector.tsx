@@ -67,6 +67,12 @@ const previews = (p: (i: number) => string | undefined): Record<GalleryLayout, R
       <Block src={p(2)} className="h-full" />
     </div>
   ),
+  spotlight: (
+    <div className="relative h-full p-3">
+      <Block src={p(0)} className="h-full w-full rounded-lg ring-2 ring-primary/60 shadow-lg" />
+      <span className="absolute bottom-5 left-6 right-6 h-0.5 rounded bg-white/60"><span className="block h-full w-1/2 rounded bg-white" /></span>
+    </div>
+  ),
   band: (
     <div className="grid grid-cols-6 gap-0 mt-4">
       {[0, 1, 2, 3, 4, 5].map((i) => (
@@ -85,6 +91,7 @@ const OPTIONS: Array<{ id: GalleryLayout; label: string; hint?: string }> = [
   { id: "staggered", label: "Staggered columns" },
   { id: "mosaic", label: "Featured mosaic" },
   { id: "band", label: "Full-bleed band" },
+  { id: "spotlight", label: "Spotlight (auto-scroll)", hint: "One photo at a time, advancing on its own" },
 ];
 
 export const GalleryLayoutSelector = ({

@@ -30,7 +30,8 @@ export type GalleryLayout =
   | "strip"
   | "staggered"
   | "mosaic"
-  | "band";
+  | "band"
+  | "spotlight";
 
 export interface TextColors {
   /** Body text (hex like #3a2a33); empty = theme default. */

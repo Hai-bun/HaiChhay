@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ChevronLeft, ChevronRight, X, Camera } from "lucide-react";
 import { getTranslations, Language, getStoredLanguage } from "@/lib/i18n";
+import { SpotlightGallery } from "./SpotlightGallery";
 import { FadeInImage } from "@/components/ui/FadeInImage";
 import { cn } from "@/lib/utils";
 import type { GalleryLayout } from "@/lib/weddingStore";
@@ -14,7 +15,8 @@ interface PhotoGalleryProps {
 }
 
 export const PhotoGallery = ({ photos, language, layout = "default" }: PhotoGalleryProps) => {
-  const custom = layout !== "default";
+  const spotlight = layout === "spotlight";
+  const custom = layout !== "default" && !spotlight;
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const lang = language || getStoredLanguage();
   const t = getTranslations(lang);
@@ -57,6 +59,9 @@ export const PhotoGallery = ({ photos, language, layout = "default" }: PhotoGall
           </h2>
         </div>
 
+        {spotlight ? (
+          <SpotlightGallery photos={photos} language={lang} onOpen={setSelectedIndex} />
+        ) : (
         <div className={cn("gallery-grid", custom ? `gl-grid gl-${layout}` : "grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4")}>
           {photos.map((photo, index) => (
             <div
@@ -72,6 +77,7 @@ export const PhotoGallery = ({ photos, language, layout = "default" }: PhotoGall
             </div>
           ))}
         </div>
+        )}
 
         <Dialog open={selectedIndex !== null} onOpenChange={() => setSelectedIndex(null)}>
           <DialogContent className="max-w-4xl p-0 bg-transparent border-none">
