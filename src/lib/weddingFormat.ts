@@ -64,6 +64,28 @@ export const formatWeddingDate = (
   });
 };
 
+/** Weekday / day / month / year as separate strings (for stacked date layouts). */
+export const getDateParts = (
+  dateStr: string,
+  language: Language,
+): { weekday: string; day: string; month: string; year: string } => {
+  const date = new Date(`${dateStr}T00:00:00`);
+  if (language === "km") {
+    return {
+      weekday: KHMER_WEEKDAYS[date.getDay()],
+      day: toKhmerDigits(String(date.getDate()).padStart(2, "0")),
+      month: KHMER_MONTHS[date.getMonth()],
+      year: toKhmerDigits(date.getFullYear()),
+    };
+  }
+  return {
+    weekday: date.toLocaleDateString("en-US", { weekday: "long" }),
+    day: String(date.getDate()).padStart(2, "0"),
+    month: date.toLocaleDateString("en-US", { month: "long" }),
+    year: String(date.getFullYear()),
+  };
+};
+
 /** Turns a stored "HH:mm" value into a 12-hour display time. */
 export const formatWeddingTime = (
   timeStr: string,
