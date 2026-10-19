@@ -89,6 +89,7 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
   const picked = (url?: string) => (url && known.has(url) ? url : "");
   const heroImg = picked(picks.hero) || weddingData.backgroundImage || photos[0] || "";
   const heroIsVideo = /\.(mp4|webm|ogg)(\?|$)/i.test(heroImg);
+  const sideImg = picked(picks.heroSide) || (heroIsVideo ? "" : heroImg);
   const dateText = formatWeddingDate(weddingData.weddingDate, language);
   // Polaroid photo: prefer one that is not already the hero image.
   const saveImg =
@@ -259,7 +260,7 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
       <div className="mo-progress" aria-hidden="true" />
 
       {/* ---------- Hero: full-bleed photo, Ken Burns, curtain reveal ---------- */}
-      <section className="mo-hero" style={!heroIsVideo && heroImg ? ({ "--hero-img": `url("${heroImg}")` } as CSSProperties) : undefined}>
+      <section className="mo-hero" style={sideImg ? ({ "--hero-img": `url("${sideImg}")` } as CSSProperties) : undefined}>
         <div className={cn("mo-hero-media", animOn && "mo-hero-media-open")} aria-hidden="true">
           {heroImg ? (
             heroIsVideo ? (

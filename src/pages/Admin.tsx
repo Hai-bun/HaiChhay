@@ -828,6 +828,12 @@ const Admin = () => {
                           [data.backgroundImage, ...data.photos],
                         ],
                         [
+                          "heroSide",
+                          "Hero opening background",
+                          "Shown softly blurred at the sides while the hero photo opens. Auto uses the hero photo.",
+                          [data.backgroundImage, ...data.photos],
+                        ],
+                        [
                           "polaroid",
                           "Save the Date photo",
                           "The tilted polaroid next to the date and countdown.",

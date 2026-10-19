@@ -47,6 +47,8 @@ export interface TextColors {
 export interface SectionImages {
   /** Motion Showcase hero photo (default: the Background image). */
   hero?: string;
+  /** Photo shown (blurred) at the sides while the hero opens (default: the hero photo). */
+  heroSide?: string;
   /** Polaroid photo in the Save the Date section. */
   polaroid?: string;
   /** Photo in the round seal on the cover page (default: a heart icon). */
