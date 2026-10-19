@@ -3008,6 +3008,20 @@ html:lang(km) .wedding-root .font-script { word-spacing: 0.1em; }
 .header-nav-link:hover { color: hsl(var(--foreground)); background: hsl(var(--primary) / 0.1); }
 .header-nav-link.is-active { color: hsl(var(--primary-foreground)); background: hsl(var(--primary)); }
 .wedding-root section[id] { scroll-margin-top: 3.75rem; }
+/* Phones: bottom tab bar (thumb reach). The language button stays top-right. */
+@media (max-width: 639px) {
+  .header-nav {
+    top: auto; bottom: 0;
+    height: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+    padding: 0 0.75rem env(safe-area-inset-bottom, 0px);
+    border-bottom: 0;
+    border-top: 1px solid hsl(var(--border));
+    animation-name: header-nav-in-bottom;
+  }
+  .wedding-root:has(.header-nav) { padding-bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px)); }
+  .wedding-root section[id] { scroll-margin-top: 0; }
+}
+@keyframes header-nav-in-bottom { from { transform: translateY(100%); opacity: 0; } to { transform: none; opacity: 1; } }
 .animations-off .header-nav { animation: none; }
 @media (prefers-reduced-motion: reduce) { .header-nav { animation: none; } }
 
