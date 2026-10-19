@@ -1,5 +1,4 @@
 import { MapPin, Navigation } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { getTranslations, Language, getStoredLanguage } from "@/lib/i18n";
 
 interface LocationSectionProps {
@@ -70,39 +69,41 @@ export const LocationSection = ({ eventTitle, eventAddress, eventMapUrl, eventTi
     : `https://maps.google.com/maps?q=${encodeURIComponent(eventAddress)}`;
 
   return (
-    <section id="location" className="scroll-reveal py-16 px-4 bg-card">
+    <section id="location" className="location-section scroll-reveal py-16 px-4 bg-card">
       <div className="max-w-4xl mx-auto text-center">
-        <MapPin className="w-10 h-10 text-primary mx-auto mb-4" />
-        
-        <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-foreground mb-2">
+        <div className="loc-icon" aria-hidden="true">
+          <MapPin className="w-7 h-7" />
+        </div>
+
+        <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-foreground mt-5 mb-3">
           {displayTitle}
         </h2>
 
-        <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-          {displayAddress}
+        <p className="loc-address">
+          <MapPin className="w-4 h-4 shrink-0" />
+          <span>{displayAddress}</span>
         </p>
-        
-        {/* Embedded Map */}
-        <div className="w-full h-64 sm:h-80 rounded-lg overflow-hidden shadow-card mb-6 bg-muted">
-          <iframe
-            src={embedUrl}
-            width="100%"
-            height="100%"
-            style={{ border: 0 }}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            title="Wedding Location Map"
-          />
+
+        {/* Embedded Map in a glowing frame */}
+        <div className="loc-frame">
+          <div className="loc-map">
+            <iframe
+              src={embedUrl}
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Wedding Location Map"
+            />
+          </div>
         </div>
-        
-        <Button
-          onClick={() => window.open(directionsUrl, '_blank')}
-          className="bg-primary hover:bg-primary/90 text-primary-foreground"
-        >
-          <Navigation className="w-4 h-4 mr-2" />
-          {t.getDirections}
-        </Button>
+
+        <button type="button" className="loc-btn" onClick={() => window.open(directionsUrl, "_blank")}>
+          <Navigation className="w-4 h-4" />
+          <span>{t.getDirections}</span>
+        </button>
       </div>
     </section>
   );

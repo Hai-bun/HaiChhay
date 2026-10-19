@@ -131,9 +131,10 @@ const GuestInvite = () => {
       {/* Glass envelope card */}
       <div className="relative z-10 w-full max-w-md animate-fade-in-up">
         <div className="invite-card rounded-[2rem] border border-white/25 bg-white/10 backdrop-blur-xl shadow-2xl px-7 py-12 sm:px-10 text-center text-white">
+          <span className="invite-frame" aria-hidden="true" />
           {/* Seal: a photo chosen in Admin, else the heart */}
           <div className="flex justify-center mb-6">
-            <div className="w-24 h-24 rounded-full bg-primary shadow-elevated flex items-center justify-center ring-4 ring-white/30 overflow-hidden">
+            <div className="invite-seal w-24 h-24 rounded-full bg-primary shadow-elevated flex items-center justify-center ring-4 ring-white/30 overflow-hidden">
               {sealImage ? (
                 <img
                   src={sealImage}
@@ -150,7 +151,7 @@ const GuestInvite = () => {
             </div>
           </div>
 
-          <p className="text-xs uppercase tracking-[0.35em] text-white/80 mb-4 animate-fade-in-up delay-100">
+          <p className="invite-kicker text-xs uppercase tracking-[0.35em] mb-4 animate-fade-in-up delay-100">
             {t.welcomeTitle}
           </p>
 
@@ -174,6 +175,7 @@ const GuestInvite = () => {
             </h1>
           )}
 
+          <div className="invite-orn animate-fade-in-up delay-300" aria-hidden="true"><span /><i /><span /></div>
           <p className="font-serif text-base text-white/85 mb-7 animate-fade-in-up delay-300">
             {t.weInviteYou}
           </p>
@@ -183,14 +185,14 @@ const GuestInvite = () => {
             <h2 className="couple-name font-script text-4xl sm:text-5xl leading-tight">
               <FitText>{displayGroom}</FitText>
             </h2>
-            <p className="font-serif text-2xl my-1 text-white/90">{amp}</p>
+            <p className="invite-amp font-serif text-2xl my-1"><span aria-hidden="true" /><b>{amp}</b><span aria-hidden="true" /></p>
             <h2 className="couple-name font-script text-4xl sm:text-5xl leading-tight">
               <FitText>{displayBride}</FitText>
             </h2>
           </div>
 
           {/* Date */}
-          <div className="inline-flex items-center gap-2 text-sm text-white/85 font-serif mb-9 animate-fade-in-up delay-700">
+          <div className="invite-date inline-flex items-center gap-2 text-sm font-serif mb-9 animate-fade-in-up delay-700">
             <Calendar className="w-4 h-4" />
             <span>
               {formatWeddingDate(weddingData.weddingDate, language)}
@@ -208,7 +210,7 @@ const GuestInvite = () => {
                 navigate(`/wedding/${guestId || ""}`);
               }}
               size="lg"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-12 py-6 text-base shadow-elevated animate-fade-in-up delay-700">
+              className="invite-open bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-12 py-6 text-base shadow-elevated animate-fade-in-up delay-700">
               <Heart className="w-4 h-4 mr-2" fill="currentColor" />
               {t.openInvitation}
             </Button>

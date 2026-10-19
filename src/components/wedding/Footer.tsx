@@ -42,7 +42,7 @@ export const Footer = ({ groomName, brideName, groomNameKh, brideNameKh, socialL
   const t = getTranslations(lang);
 
   return (
-    <footer className="py-12 px-4 text-center bg-card border-t border-border">
+    <footer className="py-12 px-4 text-center bg-card">
       <Heart className="w-8 h-8 text-primary mx-auto mb-4" fill="currentColor" />
       <p className="footer-names font-script text-2xl text-foreground mb-2">
         {lang === "km" && groomNameKh ? groomNameKh : groomName}{" "}
