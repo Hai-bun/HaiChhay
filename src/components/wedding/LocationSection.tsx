@@ -80,6 +80,14 @@ export const LocationSection = ({ eventTitle, eventAddress, eventMapUrl, eventTi
 
         <div className="loc-frame">
           <div className="loc-map">
+            <span className="loc-grid" aria-hidden="true" />
+            <span className="loc-scan" aria-hidden="true" />
+            <span className="loc-hud loc-hud-tl" aria-hidden="true" />
+            <span className="loc-hud loc-hud-tr" aria-hidden="true" />
+            <span className="loc-hud loc-hud-bl" aria-hidden="true" />
+            <span className="loc-hud loc-hud-br" aria-hidden="true" />
+            <span className="loc-live" aria-hidden="true"><i />LIVE</span>
+            <span className="loc-ping" aria-hidden="true"><i /><i /><b /></span>
             <iframe
               src={embedUrl}
               width="100%"

@@ -108,27 +108,6 @@ const GuestInvite = () => {
 
   return (
     <div className={`guest-invite wedding-root theme-${weddingData.theme} template-${template.id} min-h-screen relative overflow-hidden flex items-center justify-center px-4 py-12`}>
-      {/* Background media */}
-      {isVideo ? (
-        <video
-          className="absolute inset-0 w-full h-full object-cover"
-          src={bgMedia}
-          autoPlay
-          loop
-          muted
-          playsInline
-        />
-      ) : bgMedia ? (
-        <div
-          className="absolute inset-0 bg-cover bg-center scale-105"
-          style={{ backgroundImage: `url(${bgMedia})` }}
-        />
-      ) : (
-        <div className="absolute inset-0 bg-[var(--hero-gradient)]" />
-      )}
-      {/* Readability overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/30 to-black/60" />
-
       {template.features.showPetals && <FloatingPetals />}
 
       <LanguageSwitcher

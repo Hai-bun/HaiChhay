@@ -68,6 +68,7 @@ export const SpotlightGallery = ({ photos, language, onOpen }: SpotlightGalleryP
         ))}
       </div>
 
+      <div className="sp-border">
       <div
         className="sp-stage"
         onPointerDown={(e) => {
@@ -141,6 +142,7 @@ export const SpotlightGallery = ({ photos, language, onOpen }: SpotlightGalleryP
             </button>
           </>
         )}
+      </div>
       </div>
     </div>
   );
