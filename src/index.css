@@ -3008,20 +3008,33 @@ html:lang(km) .wedding-root .font-script { word-spacing: 0.1em; }
 .header-nav-link:hover { color: hsl(var(--foreground)); background: hsl(var(--primary) / 0.1); }
 .header-nav-link.is-active { color: hsl(var(--primary-foreground)); background: hsl(var(--primary)); }
 .wedding-root section[id] { scroll-margin-top: 3.75rem; }
-/* Phones: bottom tab bar (thumb reach). The language button stays top-right. */
+.header-nav-icon { display: none; }
+/* Phones: floating bottom tab bar (thumb reach). Language button stays top-right. */
 @media (max-width: 639px) {
   .header-nav {
-    top: auto; bottom: 0;
-    height: calc(3.5rem + env(safe-area-inset-bottom, 0px));
-    padding: 0 0.75rem env(safe-area-inset-bottom, 0px);
-    border-bottom: 0;
-    border-top: 1px solid hsl(var(--border));
+    top: auto;
+    left: 0.75rem; right: 0.75rem;
+    bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    height: auto;
+    padding: 0.35rem;
+    border: 1px solid hsl(var(--border) / 0.8);
+    border-radius: 1.5rem;
+    background: hsl(var(--background) / 0.88);
+    box-shadow: 0 12px 32px -10px hsl(var(--foreground) / 0.35), 0 2px 6px hsl(var(--foreground) / 0.08);
     animation-name: header-nav-in-bottom;
   }
-  .wedding-root:has(.header-nav) { padding-bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px)); }
+  .header-nav-links { gap: 0.15rem; scroll-snap-type: x proximity; }
+  .header-nav-link {
+    display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
+    min-width: 4.1rem; padding: 0.5rem 0.55rem 0.45rem;
+    border-radius: 1.1rem; font-size: 0.68rem; line-height: 1.15; scroll-snap-align: center;
+  }
+  .header-nav-icon { display: block; width: 1.25rem; height: 1.25rem; }
+  .header-nav-link.is-active { box-shadow: 0 6px 14px -6px hsl(var(--primary) / 0.7); }
+  .wedding-root:has(.header-nav) { padding-bottom: calc(5.75rem + env(safe-area-inset-bottom, 0px)); }
   .wedding-root section[id] { scroll-margin-top: 0; }
 }
-@keyframes header-nav-in-bottom { from { transform: translateY(100%); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes header-nav-in-bottom { from { transform: translateY(140%); opacity: 0; } to { transform: none; opacity: 1; } }
 .animations-off .header-nav { animation: none; }
 @media (prefers-reduced-motion: reduce) { .header-nav { animation: none; } }
 

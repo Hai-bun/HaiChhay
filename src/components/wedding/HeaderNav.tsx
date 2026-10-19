@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Home, Heart, BookHeart, MapPin, Clock, Images, Gift, MailCheck, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getTranslations, type Language } from "@/lib/i18n";
 import type { WeddingData } from "@/lib/weddingStore";
@@ -11,13 +12,13 @@ interface HeaderNavProps {
 // Sections that can appear in the bar, in page order. Only the ones actually
 // rendered on the page (matched by id) get a link.
 const ITEMS = [
-  { id: "couple", key: "navCouple" },
-  { id: "story", key: "navStory" },
-  { id: "location", key: "navLocation" },
-  { id: "schedule", key: "navSchedule" },
-  { id: "gallery", key: "navGallery" },
-  { id: "gift", key: "navGift" },
-  { id: "rsvp", key: "navRsvp" },
+  { id: "couple", key: "navCouple", icon: Heart },
+  { id: "story", key: "navStory", icon: BookHeart },
+  { id: "location", key: "navLocation", icon: MapPin },
+  { id: "schedule", key: "navSchedule", icon: Clock },
+  { id: "gallery", key: "navGallery", icon: Images },
+  { id: "gift", key: "navGift", icon: Gift },
+  { id: "rsvp", key: "navRsvp", icon: MailCheck },
 ] as const;
 
 const firstWord = (s: string) => s.trim().split(/\s+/)[0] ?? "";
@@ -94,10 +95,11 @@ export const HeaderNav = ({ weddingData, language }: HeaderNavProps) => {
     (language === "km" ? nb.groomKh : nb.groom)?.trim() || firstWord(groom);
   const brandBride =
     (language === "km" ? nb.brideKh : nb.bride)?.trim() || firstWord(bride);
-  const links = [{ id: "top", label: t.navHome }].concat(
+  const links = [{ id: "top", label: t.navHome, icon: Home as LucideIcon }].concat(
     ITEMS.filter((i) => present.includes(i.id)).map((i) => ({
       id: i.id,
       label: t[i.key],
+      icon: i.icon as LucideIcon,
     })),
   );
 
@@ -116,7 +118,8 @@ export const HeaderNav = ({ weddingData, language }: HeaderNavProps) => {
             data-active={active === l.id}
             className={cn("header-nav-link", active === l.id && "is-active")}
             onClick={() => go(l.id)}>
-            {l.label}
+            <l.icon className="header-nav-icon" aria-hidden="true" />
+            <span className="header-nav-label">{l.label}</span>
           </button>
         ))}
       </div>
