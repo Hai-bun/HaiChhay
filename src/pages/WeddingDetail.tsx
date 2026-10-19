@@ -30,6 +30,7 @@ import { CuteStickers } from "@/components/ui/CuteStickers";
 
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 import { HeaderNav } from "@/components/wedding/HeaderNav";
+import { MusicToggle } from "@/components/ui/MusicToggle";
 import { Heart, Calendar } from "lucide-react";
 import { applyTheme, getTheme, ThemeType, THEMES } from "@/lib/themeConfig";
 import { getTemplate, TEMPLATES } from "@/lib/templateConfig";
@@ -178,6 +179,8 @@ const WeddingDetail = () => {
   const heroMediaUrl = weddingData.backgroundImage || "";
   const isVideoBackground = /\.(mp4|webm|ogg)(\?|$)/i.test(heroMediaUrl);
 
+  const floral = weddingData.floralDecor && weddingData.floralDecor !== "none" ? weddingData.floralDecor : undefined;
+
   const rootClassName = cn(
     "min-h-screen bg-background wedding-root animate-fade-in",
     `theme-${activeThemeId}`,
@@ -205,12 +208,13 @@ const WeddingDetail = () => {
 
   if (SelfContainedTemplate) {
     return (
-      <div className={rootClassName}>
+      <div className={rootClassName} data-floral={floral}>
         <LanguageSwitcher
           onLanguageChange={handleLanguageChange}
           currentLanguage={language}
         />
         <HeaderNav weddingData={weddingData} language={language} />
+        <MusicToggle url={weddingData.musicUrl} language={language} autoStart />
         {showSparkles && <SparkleField />}
         {showCuteStickers && <CuteStickers />}
         <SelfContainedTemplate
@@ -223,13 +227,14 @@ const WeddingDetail = () => {
   }
 
   return (
-    <div className={rootClassName}>
+    <div className={rootClassName} data-floral={floral}>
       {/* Language Switcher */}
       <LanguageSwitcher
         onLanguageChange={handleLanguageChange}
         currentLanguage={language}
       />
       <HeaderNav weddingData={weddingData} language={language} />
+      <MusicToggle url={weddingData.musicUrl} language={language} autoStart />
 
       {showPetals && <FloatingPetals />}
       {showSparkles && <SparkleField />}

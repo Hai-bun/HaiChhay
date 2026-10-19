@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { Clock } from "lucide-react";
 import type { ScheduleConfig } from "@/lib/weddingStore";
 import { getTranslations, type Language, getStoredLanguage } from "@/lib/i18n";
@@ -17,6 +18,32 @@ const displayTime = (time: string, lang: Language): string =>
 export const ScheduleSection = ({ schedule, language }: ScheduleSectionProps) => {
   const lang = language || getStoredLanguage();
   const t = getTranslations(lang);
+
+  // Scroll animation: each event slides in (dot pops, rail line draws down) as
+  // it reaches the viewport. Progressive — items stay visible until armed.
+  const listRef = useRef<HTMLOListElement>(null);
+  const [armed, setArmed] = useState(false);
+  const shown = !!schedule?.enabled && (schedule?.items?.length ?? 0) > 0;
+
+  useEffect(() => {
+    const list = listRef.current;
+    if (!shown || !list || typeof IntersectionObserver === "undefined") return;
+    const items = Array.from(list.querySelectorAll<HTMLElement>(".schedule-item"));
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-in");
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.25, rootMargin: "0px 0px -8% 0px" },
+    );
+    setArmed(true);
+    items.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [shown, schedule?.items, lang]);
 
   const items = (schedule?.items ?? []).filter(
     (item) => item.title?.trim() || item.time?.trim(),
@@ -39,7 +66,7 @@ export const ScheduleSection = ({ schedule, language }: ScheduleSectionProps) =>
           </h2>
         </div>
 
-        <ol className="schedule-timeline">
+        <ol ref={listRef} className="schedule-timeline" data-anim={armed ? "on" : undefined}>
           {items.map((item, index) => {
             const itemTitle =
               km && item.titleKh?.trim() ? item.titleKh : item.title;
@@ -48,17 +75,17 @@ export const ScheduleSection = ({ schedule, language }: ScheduleSectionProps) =>
                 ? item.descriptionKh
                 : item.description;
             return (
-              <li key={item.id || index} className="flex gap-5">
+              <li key={item.id || index} className="schedule-item flex gap-5">
                 {/* Rail: dot + connecting line */}
                 <div className="flex flex-col items-center">
-                  <span className="mt-1.5 w-4 h-4 rounded-full bg-primary ring-4 ring-background shrink-0" />
+                  <span className="schedule-dot mt-1.5 w-4 h-4 rounded-full bg-primary ring-4 ring-background shrink-0" />
                   {index < items.length - 1 && (
-                    <span className="w-px flex-1 bg-primary/25 my-1" />
+                    <span className="schedule-line w-px flex-1 bg-primary/25 my-1" />
                   )}
                 </div>
 
                 {/* Content */}
-                <div className="pb-8">
+                <div className="schedule-content pb-8">
                   <p className="font-serif text-lg font-semibold text-primary leading-none">
                     {displayTime(item.time, lang)}
                   </p>

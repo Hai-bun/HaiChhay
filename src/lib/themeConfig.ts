@@ -223,9 +223,9 @@ const hexToHsl = (hex: string): [number, number, number] => {
 // Custom text colors are set on <html> and picked up by `html[data-*-color]`
 // rules in index.css, which use !important so they beat each template's own
 // colors. Empty/invalid values fall back to the theme.
-const applyTextColors = (colors?: { body?: string; heading?: string; names?: string }) => {
+const applyTextColors = (colors?: { body?: string; heading?: string; names?: string; border?: string }) => {
   const root = document.documentElement;
-  const set = (key: "body" | "heading" | "names", vars: Record<string, string>) => {
+  const set = (key: "body" | "heading" | "names" | "border", vars: Record<string, string>) => {
     const value = colors?.[key]?.trim();
     const attr = `data-${key}-color`;
     if (value && HEX.test(value)) {
@@ -249,6 +249,7 @@ const applyTextColors = (colors?: { body?: string; heading?: string; names?: str
   }
   set("heading", { "--user-heading": colors?.heading?.trim() ?? "" });
   set("names", { "--user-names": colors?.names?.trim() ?? "" });
+  set("border", { "--user-border": colors?.border?.trim() ?? "" });
 };
 
 export const applyTheme = (
@@ -258,7 +259,7 @@ export const applyTheme = (
     bodyFont?: string;
     nameFont?: string;
     fontFiles?: Array<{ family: string; url: string }>;
-    colors?: { body?: string; heading?: string; names?: string };
+    colors?: { body?: string; heading?: string; names?: string; border?: string };
   },
 ): void => {
   const theme = getTheme(themeId);

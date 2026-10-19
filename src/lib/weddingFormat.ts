@@ -47,23 +47,13 @@ export const formatWeddingDate = (
   const date = new Date(`${dateStr}T00:00:00`);
 
   if (language === "km") {
-    try {
-      return toKhmerDigits(
-        new Intl.DateTimeFormat("km-KH", {
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        }).format(date),
-      );
-    } catch {
-      // Fallback: manual Khmer month/weekday names
-      return toKhmerDigits(
-        `${KHMER_WEEKDAYS[date.getDay()]} ${date.getDate()} ${
-          KHMER_MONTHS[date.getMonth()]
-        } ${date.getFullYear()}`,
-      );
-    }
+    // Built by hand: Intl's km-KH data is often missing, which left the month
+    // in English next to Khmer digits.
+    return toKhmerDigits(
+      `${KHMER_WEEKDAYS[date.getDay()]} ${date.getDate()} ${
+        KHMER_MONTHS[date.getMonth()]
+      } ${date.getFullYear()}`,
+    );
   }
 
   return date.toLocaleDateString("en-US", {

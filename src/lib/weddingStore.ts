@@ -20,6 +20,8 @@ export type TemplateType =
   | "cute"
   | "aurora";
 
+export type FloralDecor = "none" | "roses" | "botanical";
+
 export type GalleryLayout =
   | "default"
   | "rhythm"
@@ -37,6 +39,8 @@ export interface TextColors {
   heading?: string;
   /** Couple names. */
   names?: string;
+  /** Border of the invite card and navigation bar. */
+  border?: string;
 }
 
 export interface SectionImages {
@@ -111,6 +115,9 @@ export interface WeddingData {
   customFonts: CustomFont[];
   /** How the photo gallery is laid out ("default" = the template's own gallery). */
   galleryLayout: GalleryLayout;
+  floralDecor: FloralDecor;
+  /** Background song (mp3 URL); empty = no music. */
+  musicUrl: string;
   /** Sticky header navigation on the invitation (can be turned off in Admin). */
   showHeaderNav: boolean;
   /** Custom text colors chosen in Admin. */
@@ -246,6 +253,8 @@ const DEFAULT_WEDDING_DATA: WeddingData = {
   nameFont: "",
   customFonts: [],
   galleryLayout: "default",
+  floralDecor: "none",
+  musicUrl: "",
   showHeaderNav: true,
   textColors: {},
   sectionImages: {},
@@ -427,6 +436,8 @@ const buildWeddingProfileRow = (
     nameFont: weddingData.nameFont,
     customFonts: weddingData.customFonts,
     galleryLayout: weddingData.galleryLayout,
+    floralDecor: weddingData.floralDecor,
+    musicUrl: weddingData.musicUrl,
     showHeaderNav: weddingData.showHeaderNav,
     textColors: weddingData.textColors,
     sectionImages: weddingData.sectionImages,
@@ -510,6 +521,12 @@ const mapProfileToWeddingData = (
     galleryLayout:
       (profile.welcome_popup as { galleryLayout?: GalleryLayout })
         ?.galleryLayout ?? DEFAULT_WEDDING_DATA.galleryLayout,
+    floralDecor:
+      (profile.welcome_popup as { floralDecor?: FloralDecor })?.floralDecor ??
+      DEFAULT_WEDDING_DATA.floralDecor,
+    musicUrl:
+      (profile.welcome_popup as { musicUrl?: string })?.musicUrl ??
+      DEFAULT_WEDDING_DATA.musicUrl,
     showHeaderNav:
       (profile.welcome_popup as { showHeaderNav?: boolean })?.showHeaderNav ??
       DEFAULT_WEDDING_DATA.showHeaderNav,

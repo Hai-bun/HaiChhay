@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Heart, Calendar } from "lucide-react";
 import { getTemplate } from "@/lib/templateConfig";
 import { applyTheme, ThemeType } from "@/lib/themeConfig";
+import { MusicToggle } from "@/components/ui/MusicToggle";
+import { startMusic } from "@/lib/music";
 import { WelcomePopup } from "@/components/wedding/WelcomePopup";
 import { useWeddingData, useGuest } from "@/hooks/use-wedding-data";
 import { preloadImages } from "@/lib/preloadImage";
@@ -87,7 +89,7 @@ const GuestInvite = () => {
   const isVideo = /\.(mp4|webm|ogg)(\?|$)/i.test(bgMedia);
 
   return (
-    <div className="guest-invite min-h-screen relative overflow-hidden flex items-center justify-center px-4 py-12">
+    <div className={`guest-invite wedding-root theme-${weddingData.theme} template-${template.id} min-h-screen relative overflow-hidden flex items-center justify-center px-4 py-12`}>
       {/* Background media */}
       {isVideo ? (
         <video
@@ -115,6 +117,7 @@ const GuestInvite = () => {
         currentLanguage={language}
         onLanguageChange={setLanguage}
       />
+      <MusicToggle url={weddingData.musicUrl} language={language} />
 
       <WelcomePopup
         guestName={guest?.name}
@@ -127,7 +130,7 @@ const GuestInvite = () => {
 
       {/* Glass envelope card */}
       <div className="relative z-10 w-full max-w-md animate-fade-in-up">
-        <div className="rounded-[2rem] border border-white/25 bg-white/10 backdrop-blur-xl shadow-2xl px-7 py-12 sm:px-10 text-center text-white">
+        <div className="invite-card rounded-[2rem] border border-white/25 bg-white/10 backdrop-blur-xl shadow-2xl px-7 py-12 sm:px-10 text-center text-white">
           {/* Seal: a photo chosen in Admin, else the heart */}
           <div className="flex justify-center mb-6">
             <div className="w-24 h-24 rounded-full bg-primary shadow-elevated flex items-center justify-center ring-4 ring-white/30 overflow-hidden">
@@ -177,11 +180,11 @@ const GuestInvite = () => {
 
           {/* Couple names */}
           <div className="mb-7 animate-fade-in-up delay-500">
-            <h2 className="font-script text-4xl sm:text-5xl leading-tight">
+            <h2 className="couple-name font-script text-4xl sm:text-5xl leading-tight">
               <FitText>{displayGroom}</FitText>
             </h2>
             <p className="font-serif text-2xl my-1 text-white/90">{amp}</p>
-            <h2 className="font-script text-4xl sm:text-5xl leading-tight">
+            <h2 className="couple-name font-script text-4xl sm:text-5xl leading-tight">
               <FitText>{displayBride}</FitText>
             </h2>
           </div>
@@ -199,7 +202,11 @@ const GuestInvite = () => {
           {/* Open button */}
           <div>
             <Button
-              onClick={() => navigate(`/wedding/${guestId || ""}`)}
+              onClick={() => {
+                // A tap is the gesture that lets the song start; it keeps playing on the next page.
+                startMusic(weddingData.musicUrl);
+                navigate(`/wedding/${guestId || ""}`);
+              }}
               size="lg"
               className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-12 py-6 text-base shadow-elevated animate-fade-in-up delay-700">
               <Heart className="w-4 h-4 mr-2" fill="currentColor" />

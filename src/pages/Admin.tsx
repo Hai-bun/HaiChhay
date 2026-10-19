@@ -53,6 +53,7 @@ import {
 import { uploadWeddingImage, deleteWeddingImage } from "@/lib/storage";
 import { ThemeSelector } from "@/components/admin/ThemeSelector";
 import { ImageCropDialog } from "@/components/admin/ImageCropDialog";
+import { FloralDecorSelector } from "@/components/admin/FloralDecorSelector";
 import { GalleryLayoutSelector } from "@/components/admin/GalleryLayoutSelector";
 import { ImageSlotPicker } from "@/components/admin/ImageSlotPicker";
 import { TemplateSelector } from "@/components/admin/TemplateSelector";
@@ -245,6 +246,28 @@ const Admin = () => {
 
   // Fonts installed only on the admin's PC (e.g. a Khmer display font) can't
   // load on guests' phones, so the font file itself is uploaded and served.
+  const handleMusicUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    if (!file.type.startsWith("audio/")) {
+      toast.error(`${file.name}: please choose an audio file (mp3, m4a, wav)`);
+      return;
+    }
+    if (file.size > 15 * 1024 * 1024) {
+      toast.error(`${file.name}: file is over 15 MB, please use a shorter or smaller song`);
+      return;
+    }
+    const url = await uploadWeddingImage(file, "music");
+    if (!url) {
+      toast.error(`${file.name}: upload failed`);
+      return;
+    }
+    if (data?.musicUrl) await deleteWeddingImage(data.musicUrl);
+    setData((prev) => (prev ? { ...prev, musicUrl: url } : prev));
+    toast.success("Song uploaded — press Save to keep it");
+  };
+
   const handleFontUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = "";
@@ -679,6 +702,60 @@ const Admin = () => {
                     }
                   />
                 </div>
+                <div className="space-y-3 rounded-lg border border-border p-4">
+                  <div>
+                    <Label className="text-base">Floral decoration</Label>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Flowers in the top-left and bottom-right corners of the
+                      Couple, Story, Location, Schedule, Gift and RSVP sections.
+                    </p>
+                  </div>
+                  <FloralDecorSelector
+                    value={data.floralDecor ?? "none"}
+                    onChange={(floralDecor) => setData({ ...data, floralDecor })}
+                  />
+                </div>
+                <div className="space-y-3 rounded-lg border border-border p-4">
+                  <div>
+                    <Label className="text-base">Background song</Label>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Plays after the guest taps “Open invitation”, with a
+                      mute button on the invite and invitation pages. Upload an
+                      mp3 (max 15 MB) or paste a link.
+                    </p>
+                  </div>
+                  <div className="flex flex-col gap-2 sm:flex-row">
+                    <Input
+                      value={data.musicUrl ?? ""}
+                      onChange={(e) => setData({ ...data, musicUrl: e.target.value })}
+                      placeholder="https://…/song.mp3"
+                    />
+                    <label className="inline-flex shrink-0 cursor-pointer items-center justify-center rounded-md border border-input px-4 py-2 text-sm font-medium hover:bg-accent">
+                      Upload song
+                      <input
+                        type="file"
+                        accept="audio/*"
+                        className="hidden"
+                        onChange={handleMusicUpload}
+                      />
+                    </label>
+                  </div>
+                  {data.musicUrl && (
+                    <div className="space-y-2">
+                      <audio controls preload="none" src={data.musicUrl} className="w-full" />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={async () => {
+                          await deleteWeddingImage(data.musicUrl);
+                          setData({ ...data, musicUrl: "" });
+                        }}>
+                        Remove song
+                      </Button>
+                    </div>
+                  )}
+                </div>
                 <div className="space-y-4 rounded-lg border border-border p-4">
                   <div>
                     <Label className="text-base">Header names</Label>
@@ -969,12 +1046,13 @@ const Admin = () => {
                         color on “Theme default” to keep the template's own.
                       </p>
                     </div>
-                    <div className="grid gap-4 sm:grid-cols-3">
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                       {(
                         [
                           ["body", "Body text"],
                           ["heading", "Headings"],
                           ["names", "Couple names"],
+                          ["border", "Card border"],
                         ] as const
                       ).map(([key, label]) => {
                         const value = data.textColors?.[key] ?? "";

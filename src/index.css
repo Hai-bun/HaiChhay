@@ -3047,6 +3047,9 @@ html[data-body-color] .wedding-root {
 html[data-heading-color] .wedding-root :is(h2, h3, h4, .mo-save-title, .mo-gallery-title) {
   color: var(--user-heading) !important;
 }
+html[data-border-color] :is(.invite-card, .header-nav) {
+  border-color: var(--user-border) !important;
+}
 html[data-names-color] .wedding-root :is(.font-script, .couple-name, .mo-name, .glass-name, .cute-name, .artdeco-name) {
   color: var(--user-names) !important;
   -webkit-text-fill-color: var(--user-names) !important;
@@ -3077,3 +3080,75 @@ html[data-names-color] .wedding-root :is(.font-script, .couple-name, .mo-name, .
 .mo-reveal { will-change: opacity, transform; }
 .mo-reveal.is-in { will-change: auto; }
 img { image-rendering: auto; }
+
+/* ---------- Schedule timeline: scroll-in animation ---------- */
+.schedule-timeline[data-anim="on"] .schedule-item .schedule-content,
+.schedule-timeline[data-anim="on"] .schedule-item .schedule-dot,
+.schedule-timeline[data-anim="on"] .schedule-item .schedule-line {
+  transition:
+    opacity calc(0.7s * var(--anim-speed, 1)) ease,
+    transform calc(0.7s * var(--anim-speed, 1)) cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.schedule-timeline[data-anim="on"] .schedule-item:not(.is-in) .schedule-content { opacity: 0; transform: translateX(28px); }
+.schedule-timeline[data-anim="on"] .schedule-item:not(.is-in) .schedule-dot { opacity: 0; transform: scale(0); }
+.schedule-timeline[data-anim="on"] .schedule-item .schedule-dot { transition-delay: 0.05s; }
+.schedule-timeline[data-anim="on"] .schedule-item .schedule-content { transition-delay: 0.15s; }
+.schedule-timeline[data-anim="on"] .schedule-item .schedule-line { transform-origin: top; transition-duration: calc(0.9s * var(--anim-speed, 1)); transition-delay: 0.3s; }
+.schedule-timeline[data-anim="on"] .schedule-item:not(.is-in) .schedule-line { transform: scaleY(0); }
+.animations-off .schedule-timeline .schedule-content,
+.animations-off .schedule-timeline .schedule-dot,
+.animations-off .schedule-timeline .schedule-line { opacity: 1 !important; transform: none !important; transition: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .schedule-timeline .schedule-content,
+  .schedule-timeline .schedule-dot,
+  .schedule-timeline .schedule-line { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+
+/* ---------- Floral corner decoration (Admin → Template → Floral decoration) ----------
+   Flowers sit in the top-left and bottom-right corners of the content sections,
+   behind the text (z-index -1 inside an isolated section). */
+.wedding-root[data-floral] :is(#couple, #story, #location, #schedule, #gift, #rsvp) {
+  position: relative;
+  isolation: isolate;
+}
+.wedding-root[data-floral] :is(#couple, #story, #location, #schedule, #gift, #rsvp)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-position: left top, right bottom;
+  background-size: min(30vw, 260px) auto, min(30vw, 260px) auto;
+}
+.wedding-root[data-floral="roses"] :is(#couple, #story, #location, #schedule, #gift, #rsvp)::after {
+  background-image: url("/floral/roses-tl.svg"), url("/floral/roses-br.svg");
+}
+.wedding-root[data-floral="botanical"] :is(#couple, #story, #location, #schedule, #gift, #rsvp)::after {
+  background-image: url("/floral/botanical-tl.svg"), url("/floral/botanical-br.svg");
+  opacity: 0.85;
+}
+@media (max-width: 639px) {
+  .wedding-root[data-floral] :is(#couple, #story, #location, #schedule, #gift, #rsvp)::after {
+    background-size: 38vw auto, 38vw auto;
+    opacity: 0.8;
+  }
+}
+
+/* ---------- Background music mute button ---------- */
+.music-toggle {
+  position: fixed;
+  top: 1rem; left: 1rem;
+  z-index: 60;
+  width: 2.75rem; height: 2.75rem;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 9999px;
+  color: hsl(var(--foreground));
+  background: hsl(var(--background) / 0.85);
+  border: 1px solid hsl(var(--border));
+  box-shadow: 0 6px 18px -8px rgba(0, 0, 0, 0.4);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  transition: transform 0.2s ease;
+}
+.music-toggle:active { transform: scale(0.94); }
+.guest-invite .music-toggle { color: #fff; background: rgba(255, 255, 255, 0.14); border-color: rgba(255, 255, 255, 0.35); }
