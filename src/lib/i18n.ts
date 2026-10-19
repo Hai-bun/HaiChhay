@@ -269,9 +269,10 @@ const translations: Record<Language, Translations> = {
 
 // Get stored language or default to English
 export const getStoredLanguage = (): Language => {
-  if (typeof window === 'undefined') return 'en';
+  if (typeof window === 'undefined') return 'km';
   const stored = localStorage.getItem('wedding_language');
-  return (stored === 'km' ? 'km' : 'en') as Language;
+  // Khmer unless the guest explicitly chose English.
+  return (stored === 'en' ? 'en' : 'km') as Language;
 };
 
 // Save language preference

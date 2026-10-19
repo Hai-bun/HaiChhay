@@ -259,7 +259,7 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
       <div className="mo-progress" aria-hidden="true" />
 
       {/* ---------- Hero: full-bleed photo, Ken Burns, curtain reveal ---------- */}
-      <section className="mo-hero">
+      <section className="mo-hero" style={!heroIsVideo && heroImg ? ({ "--hero-img": `url("${heroImg}")` } as CSSProperties) : undefined}>
         <div className={cn("mo-hero-media", animOn && "mo-hero-media-open")} aria-hidden="true">
           {heroImg ? (
             heroIsVideo ? (

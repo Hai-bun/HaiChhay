@@ -249,7 +249,13 @@ const applyTextColors = (colors?: { body?: string; heading?: string; names?: str
   }
   set("heading", { "--user-heading": colors?.heading?.trim() ?? "" });
   set("names", { "--user-names": colors?.names?.trim() ?? "" });
-  set("border", { "--user-border": colors?.border?.trim() ?? "" });
+  const border = colors?.border?.trim() ?? "";
+  if (border && HEX.test(border)) {
+    const [h, sat, l] = hexToHsl(border);
+    set("border", { "--user-border": border, "--user-border-hsl": `${h} ${sat}% ${l}%` });
+  } else {
+    set("border", { "--user-border": "", "--user-border-hsl": "" });
+  }
 };
 
 export const applyTheme = (

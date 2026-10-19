@@ -3050,6 +3050,20 @@ html[data-heading-color] .wedding-root :is(h2, h3, h4, .mo-save-title, .mo-galle
 html[data-border-color] :is(.invite-card, .header-nav) {
   border-color: var(--user-border) !important;
 }
+/* Every `border-border` utility (cards, countdown boxes, inputs…) follows the colour. */
+html[data-border-color] :is(.wedding-root, .guest-invite) { --border: var(--user-border-hsl); }
+html[data-border-color] .sp-stage {
+  box-shadow:
+    0 0 0 1px var(--user-border),
+    0 0 0 7px hsl(var(--background) / 0.7),
+    0 0 0 8px hsl(var(--user-border-hsl) / 0.55),
+    0 40px 80px -34px hsl(var(--user-border-hsl) / 0.6);
+}
+html[data-border-color] .gift-card {
+  background: var(--user-border);
+  animation: none;
+  box-shadow: 0 30px 60px -28px hsl(var(--user-border-hsl) / 0.5);
+}
 html[data-names-color] .wedding-root :is(.font-script, .couple-name, .mo-name, .glass-name, .cute-name, .artdeco-name) {
   color: var(--user-names) !important;
   -webkit-text-fill-color: var(--user-names) !important;
@@ -3213,3 +3227,51 @@ img { image-rendering: auto; }
 }
 .animations-off .sp-slide.is-active img { animation: none; }
 @media (max-width: 767px) { .sp-glows { inset: 0.5rem -0.5rem -0.5rem; } .sp-glow { filter: blur(30px) saturate(1.4); } }
+
+/* ---------- Larger "THE COUPLE" label ---------- */
+.couple-section .couple-eyebrow {
+  font-size: clamp(1.15rem, 4.4vw, 1.65rem);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  margin-bottom: 1.1rem;
+}
+.mo-km .couple-eyebrow, html:lang(km) .couple-section .couple-eyebrow { letter-spacing: 0; text-transform: none; }
+
+/* ---------- Aurora hero: styled backdrop that shows while the curtain opens ----------
+   The photo reveals from the centre outward; the area not yet revealed is now a
+   soft blurred copy of the photo over a plum + gold ornament, with a gold light
+   line that sweeps out of the middle. */
+.template-aurora .mo-hero {
+  background:
+    radial-gradient(ellipse at 50% 35%, rgba(150, 60, 110, 0.55), transparent 65%),
+    radial-gradient(circle at 15% 85%, rgba(224, 168, 74, 0.22), transparent 45%),
+    radial-gradient(circle at 85% 15%, rgba(224, 168, 74, 0.22), transparent 45%),
+    #2a0f22;
+}
+.template-aurora .mo-hero::before {
+  content: "";
+  position: absolute; inset: -6%;
+  z-index: -2; pointer-events: none;
+  background-image: var(--hero-img, none);
+  background-size: cover; background-position: center;
+  filter: blur(34px) saturate(1.3) brightness(0.55);
+  opacity: 0.9;
+}
+.template-aurora .mo-hero::after {
+  content: "";
+  position: absolute; top: 0; bottom: 0; left: 50%;
+  width: 2px; margin-left: -1px;
+  z-index: 2; pointer-events: none;
+  background: linear-gradient(to bottom, transparent, #f5cf6b 30%, #fff3c4 50%, #f5cf6b 70%, transparent);
+  box-shadow: 0 0 22px 4px rgba(245, 207, 107, 0.55);
+  opacity: 0;
+  animation: mo-light-line 1.4s ease-out both;
+}
+@keyframes mo-light-line {
+  0% { opacity: 0; transform: scaleY(0.2); }
+  25% { opacity: 1; transform: scaleY(1); }
+  100% { opacity: 0; transform: scaleY(1) scaleX(40); }
+}
+.mo-static .template-aurora .mo-hero::after,
+.animations-off.template-aurora .mo-hero::after { display: none; }
+@media (prefers-reduced-motion: reduce) { .template-aurora .mo-hero::after { display: none; } }
