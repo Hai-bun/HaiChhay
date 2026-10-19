@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FloatingPetals } from "@/components/ui/FloatingPetals";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
-import { Button } from "@/components/ui/button";
 import { Heart, Calendar } from "lucide-react";
 import { getTemplate } from "@/lib/templateConfig";
 import { applyTheme, ThemeType } from "@/lib/themeConfig";
@@ -87,6 +86,8 @@ const GuestInvite = () => {
 
   const bgMedia = weddingData.backgroundImage || weddingData.photos[0] || "";
   const isVideo = /\.(mp4|webm|ogg)(\?|$)/i.test(bgMedia);
+  // The arch shows the seal photo picked in Admin, else the cover photo / first gallery photo.
+  const archImage = sealImage || (isVideo ? weddingData.photos[0] || "" : bgMedia);
 
   return (
     <div className={`guest-invite wedding-root theme-${weddingData.theme} template-${template.id} min-h-screen relative overflow-hidden flex items-center justify-center px-4 py-12`}>
@@ -128,95 +129,81 @@ const GuestInvite = () => {
         language={language}
       />
 
-      {/* Glass envelope card */}
-      <div className="relative z-10 w-full max-w-md animate-fade-in-up">
-        <div className="invite-card rounded-[2rem] border border-white/25 bg-white/10 backdrop-blur-xl shadow-2xl px-7 py-12 sm:px-10 text-center text-white">
-          <span className="invite-frame" aria-hidden="true" />
-          {/* Seal: a photo chosen in Admin, else the heart */}
-          <div className="flex justify-center mb-6">
-            <div className="invite-seal w-24 h-24 rounded-full bg-primary shadow-elevated flex items-center justify-center ring-4 ring-white/30 overflow-hidden">
-              {sealImage ? (
-                <img
-                  src={sealImage}
-                  alt=""
-                  draggable={false}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <Heart
-                  className="w-9 h-9 text-primary-foreground animate-heartbeat"
-                  fill="currentColor"
-                />
-              )}
-            </div>
-          </div>
-
-          <p className="invite-kicker text-xs uppercase tracking-[0.35em] mb-4 animate-fade-in-up delay-100">
-            {t.welcomeTitle}
-          </p>
-
-          {guest && (
-            <h1 className="mb-5 animate-fade-in-up delay-200">
-              <span className="block font-serif text-xl sm:text-2xl text-white/85 mb-1">
-                {t.dearGuest}
+      {/* Arch-photo cover: no card, the couple's photo is the focus */}
+      <div className="relative z-10 w-full max-w-md text-center text-white animate-fade-in-up">
+        <div className="inv-arch-wrap">
+          <div className="inv-arch">
+            {archImage ? (
+              <img src={archImage} alt="" draggable={false} />
+            ) : (
+              <span className="inv-arch-fallback">
+                <Heart className="w-14 h-14 animate-heartbeat" fill="currentColor" />
               </span>
-              {/* Long names (e.g. with nicknames) wrap inside the card and the
-                  text steps down in size as the name gets longer. */}
-              <span
-                className={`block font-script leading-tight break-words [overflow-wrap:anywhere] ${
-                  guest.name.length <= 14
-                    ? "text-5xl sm:text-6xl"
-                    : guest.name.length <= 26
-                      ? "text-4xl sm:text-5xl"
-                      : "text-3xl sm:text-4xl"
-                }`}>
-                {guest.name}
-              </span>
-            </h1>
-          )}
-
-          <div className="invite-orn animate-fade-in-up delay-300" aria-hidden="true"><span /><i /><span /></div>
-          <p className="font-serif text-base text-white/85 mb-7 animate-fade-in-up delay-300">
-            {t.weInviteYou}
-          </p>
-
-          {/* Couple names */}
-          <div className="mb-7 animate-fade-in-up delay-500">
-            <h2 className="couple-name font-script text-4xl sm:text-5xl leading-tight">
-              <FitText>{displayGroom}</FitText>
-            </h2>
-            <p className="invite-amp font-serif text-2xl my-1"><span aria-hidden="true" /><b>{amp}</b><span aria-hidden="true" /></p>
-            <h2 className="couple-name font-script text-4xl sm:text-5xl leading-tight">
-              <FitText>{displayBride}</FitText>
-            </h2>
+            )}
+            <span className="inv-arch-shade" aria-hidden="true" />
           </div>
-
-          {/* Date */}
-          <div className="invite-date inline-flex items-center gap-2 text-sm font-serif mb-9 animate-fade-in-up delay-700">
-            <Calendar className="w-4 h-4" />
-            <span>
-              {formatWeddingDate(weddingData.weddingDate, language)}
-              {" · "}
-              {formatWeddingTime(weddingData.weddingTime, language)}
-            </span>
-          </div>
-
-          {/* Open button */}
-          <div>
-            <Button
-              onClick={() => {
-                // A tap is the gesture that lets the song start; it keeps playing on the next page.
-                startMusic(weddingData.musicUrl);
-                navigate(`/wedding/${guestId || ""}`);
-              }}
-              size="lg"
-              className="invite-open bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-12 py-6 text-base shadow-elevated animate-fade-in-up delay-700">
-              <Heart className="w-4 h-4 mr-2" fill="currentColor" />
-              {t.openInvitation}
-            </Button>
-          </div>
+          <span className="inv-badge" aria-hidden="true">
+            <Heart className="w-5 h-5" fill="currentColor" />
+          </span>
         </div>
 
+        <p className="inv-kicker animate-fade-in-up delay-100">{t.welcomeTitle}</p>
+
+        {guest && (
+          <h1 className="inv-guest animate-fade-in-up delay-200">
+            <span className="inv-guest-label">{t.dearGuest}</span>
+            {/* Long names wrap inside the column and step down in size. */}
+            <span
+              className={`inv-guest-name font-script break-words [overflow-wrap:anywhere] ${
+                guest.name.length <= 14
+                  ? "text-5xl sm:text-6xl"
+                  : guest.name.length <= 26
+                    ? "text-4xl sm:text-5xl"
+                    : "text-3xl sm:text-4xl"
+              }`}>
+              {guest.name}
+            </span>
+          </h1>
+        )}
+
+        <p className="inv-invite animate-fade-in-up delay-300">{t.weInviteYou}</p>
+
+        <div className="inv-names animate-fade-in-up delay-500">
+          <h2 className="couple-name font-script text-4xl sm:text-5xl leading-tight">
+            <FitText>{displayGroom}</FitText>
+          </h2>
+          <p className="inv-amp">
+            <span aria-hidden="true" />
+            <b>{amp}</b>
+            <span aria-hidden="true" />
+          </p>
+          <h2 className="couple-name font-script text-4xl sm:text-5xl leading-tight">
+            <FitText>{displayBride}</FitText>
+          </h2>
+        </div>
+
+        <div className="inv-date animate-fade-in-up delay-700">
+          <Calendar className="w-4 h-4" />
+          <span>
+            {formatWeddingDate(weddingData.weddingDate, language)}
+            {" · "}
+            {formatWeddingTime(weddingData.weddingTime, language)}
+          </span>
+        </div>
+
+        <div>
+          <button
+            type="button"
+            className="inv-open animate-fade-in-up delay-700"
+            onClick={() => {
+              // A tap is the gesture that lets the song start; it keeps playing on the next page.
+              startMusic(weddingData.musicUrl);
+              navigate(`/wedding/${guestId || ""}`);
+            }}>
+            <Heart className="w-4 h-4" fill="currentColor" />
+            <span>{t.openInvitation}</span>
+          </button>
+        </div>
       </div>
     </div>
   );

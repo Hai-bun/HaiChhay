@@ -71,20 +71,13 @@ export const LocationSection = ({ eventTitle, eventAddress, eventMapUrl, eventTi
   return (
     <section id="location" className="location-section scroll-reveal py-16 px-4 bg-card">
       <div className="max-w-4xl mx-auto text-center">
-        <div className="loc-icon" aria-hidden="true">
-          <MapPin className="w-7 h-7" />
-        </div>
+        <MapPin className="loc-pin w-9 h-9 mx-auto" />
 
-        <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-foreground mt-5 mb-3">
+        <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-foreground mt-3 mb-2">
           {displayTitle}
         </h2>
+        <p className="loc-address">{displayAddress}</p>
 
-        <p className="loc-address">
-          <MapPin className="w-4 h-4 shrink-0" />
-          <span>{displayAddress}</span>
-        </p>
-
-        {/* Embedded Map in a glowing frame */}
         <div className="loc-frame">
           <div className="loc-map">
             <iframe
@@ -98,12 +91,11 @@ export const LocationSection = ({ eventTitle, eventAddress, eventMapUrl, eventTi
               title="Wedding Location Map"
             />
           </div>
+          <button type="button" className="loc-btn" onClick={() => window.open(directionsUrl, "_blank")}>
+            <Navigation className="w-4 h-4" />
+            <span>{t.getDirections}</span>
+          </button>
         </div>
-
-        <button type="button" className="loc-btn" onClick={() => window.open(directionsUrl, "_blank")}>
-          <Navigation className="w-4 h-4" />
-          <span>{t.getDirections}</span>
-        </button>
       </div>
     </section>
   );
