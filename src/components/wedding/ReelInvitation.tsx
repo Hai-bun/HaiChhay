@@ -1,7 +1,7 @@
 import { Calendar, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Language, getTranslations } from "@/lib/i18n";
-import { Guest, WeddingData } from "@/lib/weddingStore";
+import { Guest, WeddingData, getLocationImage } from "@/lib/weddingStore";
 import { getTemplate } from "@/lib/templateConfig";
 import { formatWeddingDate, formatWeddingTime } from "@/lib/weddingFormat";
 import { CinematicVideo } from "./CinematicVideo";
@@ -60,6 +60,7 @@ export const ReelInvitation = ({
         eventTitle={weddingData.eventTitle}
         eventAddress={weddingData.eventAddress}
         eventMapUrl={weddingData.eventMapUrl}
+        image={getLocationImage(weddingData)}
         language={language}
       />
     ),

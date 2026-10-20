@@ -3523,3 +3523,54 @@ html[data-border-color] .loc-frame {
 .loc-btn svg { color: var(--neon); }
 .animations-off .loc-scan, .animations-off .loc-ping i, .animations-off .loc-live i { animation: none; }
 @media (prefers-reduced-motion: reduce) { .loc-scan, .loc-ping i, .loc-live i { animation: none; } }
+
+/* ---------- Save-the-Date polaroid pile (auto-flicking) ---------- */
+.pstack-wrap { width: min(82%, 21rem); }
+.pstack { position: relative; width: 100%; aspect-ratio: 4 / 5.15; cursor: pointer; outline-offset: 10px; }
+.pcard {
+  position: absolute; inset: 0;
+  background: #fff; padding: 0.85rem 0.85rem 3.1rem; border-radius: 6px;
+  box-shadow: 0 26px 50px -22px rgba(60, 20, 50, 0.5), 0 3px 8px rgba(60, 20, 50, 0.14);
+  transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.8s ease;
+  animation: pcard-in 0.8s ease backwards;
+  will-change: transform;
+}
+@keyframes pcard-in { from { opacity: 0; } }
+.pcard img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 2px; user-select: none; -webkit-user-drag: none; }
+.pcard[data-o="-1"] { transform: translate(115%, -18%) rotate(26deg); opacity: 0; z-index: 4; pointer-events: none; }
+.pcard[data-o="0"]  { transform: rotate(-3deg); z-index: 3; }
+.pcard[data-o="1"]  { transform: translate(16px, 12px) rotate(4.5deg) scale(0.965); z-index: 2; }
+.pcard[data-o="2"]  { transform: translate(-14px, 22px) rotate(-8deg) scale(0.93); z-index: 1; }
+.pstack:hover .pcard[data-o="0"] { transform: rotate(0deg) scale(1.025); }
+.pcard-count {
+  position: absolute; left: 0; right: 0; bottom: 0.9rem; text-align: center;
+  font: 500 0.82rem/1 var(--font-serif); letter-spacing: 0.18em; color: #8a7a84;
+}
+.pstack-dots { display: flex; justify-content: center; gap: 0.45rem; margin-top: 2.2rem; }
+.pstack-dots span { width: 6px; height: 6px; border-radius: 9999px; background: hsl(var(--primary) / 0.28); transition: width 0.35s ease, background 0.35s ease; }
+.pstack-dots span.is-on { width: 20px; background: hsl(var(--primary)); }
+@media (prefers-reduced-motion: reduce) { .pcard { transition: none; animation: none; } }
+.animations-off .pcard, .mo-static .pcard { transition: none; animation: none; }
+
+/* ---------- Location: smaller map beside one photo ---------- */
+.location-section .loc-layout { display: grid; gap: 1.25rem; align-items: stretch; max-width: 56rem; margin: 0 auto; }
+.location-section .loc-layout:not(.has-photo) { max-width: 36rem; }
+@media (min-width: 768px) {
+  .location-section .loc-layout.has-photo { grid-template-columns: 0.78fr 1.22fr; gap: 1.5rem; }
+}
+.loc-photo {
+  position: relative; padding: 4px; border-radius: 30px;
+  background: hsl(var(--primary) / 0.45);
+  box-shadow: 0 26px 50px -30px rgba(0, 0, 0, 0.45);
+}
+html[data-border-color] .loc-photo { background: var(--user-border); padding: 3px; }
+.loc-photo-inner { height: 100%; min-height: 15rem; border-radius: 26px; overflow: hidden; background: hsl(var(--muted)); }
+.loc-photo-inner img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; animation: inv-zoom 16s ease-in-out infinite alternate; }
+.location-section .loc-frame { height: 100%; }
+.location-section .loc-map { height: 15rem; }
+@media (min-width: 768px) {
+  .location-section .loc-map { height: 100%; min-height: 21rem; }
+  .location-section .loc-layout:not(.has-photo) .loc-map { height: 21rem; }
+}
+@media (prefers-reduced-motion: reduce) { .loc-photo-inner img { animation: none; } }
+.animations-off .loc-photo-inner img { animation: none; }

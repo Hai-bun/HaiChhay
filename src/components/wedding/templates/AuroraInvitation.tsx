@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import type { Guest, WeddingData } from "@/lib/weddingStore";
 import { getTranslations, type Language } from "@/lib/i18n";
 import { formatWeddingDate, formatWeddingTime, localizeDigits } from "@/lib/weddingFormat";
+import { PolaroidStack } from "../PolaroidStack";
 import { CountdownTimer } from "../CountdownTimer";
 import { PhotoGallery } from "../PhotoGallery";
 import { TemplateSections, getCoupleDisplay, type SectionKey } from "./TemplateSections";
@@ -91,13 +92,12 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
   const heroIsVideo = /\.(mp4|webm|ogg)(\?|$)/i.test(heroImg);
   const sideImg = picked(picks.heroSide) || (heroIsVideo ? "" : heroImg);
   const dateText = formatWeddingDate(weddingData.weddingDate, language);
-  // Polaroid photo: prefer one that is not already the hero image.
-  const saveImg =
-    picked(picks.polaroid) ||
-    photos.find((p) => p !== heroImg) ||
-    photos.find((p) => p !== heroImg) ||
-    photos[0] ||
-    "";
+  // Polaroid pile: photos picked in Admin (in order), else the gallery photos that
+  // are not the hero image. A single older pick still leads the pile.
+  const chosenPile = (picks.polaroidList ?? []).filter((u) => known.has(u));
+  const firstPick = picked(picks.polaroid);
+  const autoPile = (photos.filter((p) => p !== heroImg).length ? photos.filter((p) => p !== heroImg) : photos).filter((p) => p !== firstPick);
+  const polaroidPhotos = (chosenPile.length ? chosenPile : [...(firstPick ? [firstPick] : []), ...autoPile]).slice(0, 8);
 
   const shellRef = useRef<HTMLDivElement>(null);
   const galleryRef = useRef<HTMLElement>(null);
@@ -307,13 +307,7 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
         </div>
 
         <div className="mo-save-inner">
-          {saveImg && (
-            <figure className="mo-polaroid mo-reveal">
-              <div className="mo-polaroid-photo">
-                <img src={saveImg} alt="" loading="lazy" draggable={false} />
-              </div>
-            </figure>
-          )}
+          {polaroidPhotos.length > 0 && <PolaroidStack photos={polaroidPhotos} language={language} />}
 
           <div className="mo-save-text mo-reveal">
             <p className="mo-save-eyebrow">{t.markYourCalendar}</p>

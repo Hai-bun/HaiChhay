@@ -34,7 +34,7 @@ import { MusicToggle } from "@/components/ui/MusicToggle";
 import { Heart, Calendar } from "lucide-react";
 import { applyTheme, getTheme, ThemeType, THEMES } from "@/lib/themeConfig";
 import { getTemplate, TEMPLATES } from "@/lib/templateConfig";
-import type { TemplateType } from "@/lib/weddingStore";
+import { getLocationImage, type TemplateType } from "@/lib/weddingStore";
 import { cn } from "@/lib/utils";
 import { Language, getStoredLanguage, getTranslations } from "@/lib/i18n";
 import {
@@ -425,6 +425,7 @@ const WeddingDetail = () => {
         eventTitleKh={weddingData.eventTitleKh}
         eventAddressKh={weddingData.eventAddressKh}
         eventMapUrl={weddingData.eventMapUrl}
+        image={getLocationImage(weddingData)}
         language={language}
       />
 

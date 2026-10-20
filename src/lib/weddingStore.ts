@@ -51,6 +51,10 @@ export interface SectionImages {
   heroSide?: string;
   /** Polaroid photo in the Save the Date section. */
   polaroid?: string;
+  /** Photos in the Save-the-Date polaroid pile (auto-flicks through them). */
+  polaroidList?: string[];
+  /** Photo beside the map in the Location section (default: a gallery photo). */
+  location?: string;
   /** Photo in the round seal on the cover page (default: a heart icon). */
   seal?: string;
 }
@@ -887,4 +891,12 @@ export const sendRSVPToTelegram = async (
     console.error("Failed to send Telegram notification:", error);
     return false;
   }
+};
+
+/** Photo shown beside the map: the one picked in Admin, else a gallery photo ("" = none). */
+export const getLocationImage = (d: Pick<WeddingData, "photos" | "sectionImages">): string => {
+  const photos = d.photos ?? [];
+  const pick = d.sectionImages?.location;
+  if (pick && photos.includes(pick)) return pick;
+  return photos[1] ?? photos[0] ?? "";
 };

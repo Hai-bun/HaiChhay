@@ -56,6 +56,7 @@ import { ImageCropDialog } from "@/components/admin/ImageCropDialog";
 import { FloralDecorSelector } from "@/components/admin/FloralDecorSelector";
 import { GalleryLayoutSelector } from "@/components/admin/GalleryLayoutSelector";
 import { ImageSlotPicker } from "@/components/admin/ImageSlotPicker";
+import { ImageMultiPicker } from "@/components/admin/ImageMultiPicker";
 import { TemplateSelector } from "@/components/admin/TemplateSelector";
 import { ThemeType, applyTheme } from "@/lib/themeConfig";
 
@@ -715,6 +716,20 @@ const Admin = () => {
                     onChange={(floralDecor) => setData({ ...data, floralDecor })}
                   />
                 </div>
+                <div className="rounded-lg border border-border p-4">
+                  <ImageSlotPicker
+                    label="Location photo"
+                    description="A photo shown beside the map in the Location section. Auto uses one of your gallery photos."
+                    value={data.sectionImages?.location ?? ""}
+                    options={[...data.photos]}
+                    onChange={(url) =>
+                      setData({
+                        ...data,
+                        sectionImages: { ...data.sectionImages, location: url },
+                      })
+                    }
+                  />
+                </div>
                 <div className="space-y-3 rounded-lg border border-border p-4">
                   <div>
                     <Label className="text-base">Background song</Label>
@@ -833,12 +848,6 @@ const Admin = () => {
                           "Shown softly blurred at the sides while the hero photo opens. Auto uses the hero photo.",
                           [data.backgroundImage, ...data.photos],
                         ],
-                        [
-                          "polaroid",
-                          "Save the Date photo",
-                          "The tilted polaroid next to the date and countdown.",
-                          data.photos,
-                        ],
                       ] as const
                     ).map(([key, label, description, options]) => (
                       <ImageSlotPicker
@@ -858,6 +867,19 @@ const Admin = () => {
                         }
                       />
                     ))}
+
+                    <ImageMultiPicker
+                      label="Save the Date photos"
+                      description="A pile of polaroids next to the date and countdown. They flick through on their own, in the order you tap them."
+                      value={data.sectionImages?.polaroidList ?? []}
+                      options={data.photos}
+                      onChange={(polaroidList) =>
+                        setData({
+                          ...data,
+                          sectionImages: { ...data.sectionImages, polaroidList },
+                        })
+                      }
+                    />
                   </div>
                 )}
 

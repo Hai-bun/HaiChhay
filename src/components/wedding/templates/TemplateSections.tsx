@@ -1,5 +1,5 @@
 import { Fragment, type ReactNode } from "react";
-import type { WeddingData, Guest } from "@/lib/weddingStore";
+import { getLocationImage, type WeddingData, type Guest } from "@/lib/weddingStore";
 import type { Language } from "@/lib/i18n";
 import { CoupleSection } from "../CoupleSection";
 import { MonogramSection } from "../MonogramSection";
@@ -80,6 +80,7 @@ export const TemplateSections = ({
         eventTitleKh={weddingData.eventTitleKh}
         eventAddressKh={weddingData.eventAddressKh}
         eventMapUrl={weddingData.eventMapUrl}
+        image={getLocationImage(weddingData)}
         language={language}
       />
     ),

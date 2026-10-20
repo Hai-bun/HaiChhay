@@ -7,6 +7,8 @@ interface LocationSectionProps {
   eventMapUrl: string;
   eventTitleKh?: string;
   eventAddressKh?: string;
+  /** Optional photo shown beside the map. */
+  image?: string;
   language?: Language;
 }
 
@@ -54,7 +56,7 @@ const getEmbedUrl = (url: string, address: string): string => {
   return `https://maps.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
 };
 
-export const LocationSection = ({ eventTitle, eventAddress, eventMapUrl, eventTitleKh, eventAddressKh, language }: LocationSectionProps) => {
+export const LocationSection = ({ eventTitle, eventAddress, eventMapUrl, eventTitleKh, eventAddressKh, image, language }: LocationSectionProps) => {
   const lang = language || getStoredLanguage();
   const t = getTranslations(lang);
   const displayTitle =
@@ -78,6 +80,14 @@ export const LocationSection = ({ eventTitle, eventAddress, eventMapUrl, eventTi
         </h2>
         <p className="loc-address">{displayAddress}</p>
 
+        <div className={image ? "loc-layout has-photo" : "loc-layout"}>
+        {image && (
+          <div className="loc-photo">
+            <div className="loc-photo-inner">
+              <img src={image} alt="" loading="lazy" decoding="async" draggable={false} />
+            </div>
+          </div>
+        )}
         <div className="loc-frame">
           <div className="loc-map">
             <span className="loc-grid" aria-hidden="true" />
@@ -103,6 +113,7 @@ export const LocationSection = ({ eventTitle, eventAddress, eventMapUrl, eventTi
             <Navigation className="w-4 h-4" />
             <span>{t.getDirections}</span>
           </button>
+        </div>
         </div>
       </div>
     </section>
