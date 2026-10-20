@@ -31,6 +31,8 @@ import { CuteStickers } from "@/components/ui/CuteStickers";
 import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 import { HeaderNav } from "@/components/wedding/HeaderNav";
 import { MusicToggle } from "@/components/ui/MusicToggle";
+import { InvitationLoader } from "@/components/ui/InvitationLoader";
+import { saveLoaderCache } from "@/lib/loaderCache";
 import { Heart, Calendar } from "lucide-react";
 import { applyTheme, getTheme, ThemeType, THEMES } from "@/lib/themeConfig";
 import { getTemplate, TEMPLATES } from "@/lib/templateConfig";
@@ -95,6 +97,11 @@ const WeddingDetail = () => {
     );
   }, [speedMultiplier]);
 
+  // Remember theme/template/names so the next loading screen already matches.
+  useEffect(() => {
+    if (weddingData) saveLoaderCache(weddingData);
+  }, [weddingData]);
+
   // Scroll-reveal: sections rise into view as the guest scrolls to them.
   // Progressive enhancement — content is visible by default and only hidden
   // once we're set up, so it never disappears if JS/observer is unavailable.
@@ -139,13 +146,7 @@ const WeddingDetail = () => {
   }, [weddingData, previewTemplate]);
 
   if (!weddingData) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center text-muted-foreground">
-          Loading wedding invitation...
-        </div>
-      </div>
-    );
+    return <InvitationLoader language={language} />;
   }
 
   const t = getTranslations(language);

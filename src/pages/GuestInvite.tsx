@@ -7,6 +7,8 @@ import { Heart, Calendar } from "lucide-react";
 import { getTemplate } from "@/lib/templateConfig";
 import { applyTheme, ThemeType } from "@/lib/themeConfig";
 import { MusicToggle } from "@/components/ui/MusicToggle";
+import { InvitationLoader } from "@/components/ui/InvitationLoader";
+import { saveLoaderCache } from "@/lib/loaderCache";
 import { startMusic } from "@/lib/music";
 import { WelcomePopup } from "@/components/wedding/WelcomePopup";
 import { useWeddingData, useGuest } from "@/hooks/use-wedding-data";
@@ -54,6 +56,10 @@ const GuestInvite = () => {
     });
   }, [weddingData]);
 
+  useEffect(() => {
+    if (weddingData) saveLoaderCache(weddingData);
+  }, [weddingData]);
+
   // Warm the cache for the heavy media on the full invitation while the guest
   // is still looking at the envelope, so it's ready the moment they open it.
   useEffect(() => {
@@ -66,13 +72,7 @@ const GuestInvite = () => {
   }, [weddingData]);
 
   if (isLoading || !weddingData) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-romantic-gradient">
-        <div className="animate-pulse">
-          <Heart className="w-12 h-12 text-primary animate-heartbeat" />
-        </div>
-      </div>
-    );
+    return <InvitationLoader language={language} />;
   }
 
   const t = getTranslations(language);

@@ -32,7 +32,23 @@ export const sendTelegramMessage = async (
   }
 };
 
-// Owner-only credentials (RLS blocks everyone else).
+// Owner-only credentials. Preferred home: the telegram_secrets table (RLS lets only
+// the owner read it). If that table has not been created on this Supabase project
+// yet, they are kept in the signed-in owner's own account profile (user_metadata),
+// which is just as private: anonymous visitors and other users cannot read it.
+interface StoredTelegram {
+  enabled: boolean;
+  botToken: string;
+  chatId: string;
+}
+
+const fromProfile = async (): Promise<TelegramConfig | null> => {
+  const { data } = await supabase.auth.getUser();
+  const t = data.user?.user_metadata?.telegram as Partial<StoredTelegram> | undefined;
+  if (!t) return null;
+  return { enabled: !!t.enabled, botToken: t.botToken ?? "", chatId: String(t.chatId ?? "") };
+};
+
 export const getTelegramConfig = async (): Promise<TelegramConfig | null> => {
   const { data: session } = await supabase.auth.getSession();
   if (!session.session) return null;
@@ -41,19 +57,31 @@ export const getTelegramConfig = async (): Promise<TelegramConfig | null> => {
     .select("enabled, bot_token, chat_id")
     .eq("wedding_id", WEDDING_ID)
     .maybeSingle();
-  if (error || !data) return null;
-  const row = data as unknown as { enabled: boolean; bot_token: string; chat_id: string };
-  return { enabled: row.enabled, botToken: row.bot_token, chatId: row.chat_id };
+  if (!error && data) {
+    const row = data as unknown as { enabled: boolean; bot_token: string; chat_id: string };
+    return { enabled: row.enabled, botToken: row.bot_token, chatId: row.chat_id };
+  }
+  return fromProfile();
 };
 
 export const saveTelegramConfig = async (cfg: TelegramConfig): Promise<boolean> => {
+  const clean: StoredTelegram = {
+    enabled: cfg.enabled,
+    botToken: cfg.botToken.trim(),
+    chatId: String(cfg.chatId).trim(),
+  };
   const { error } = await supabase.from("telegram_secrets" as never).upsert({
     wedding_id: WEDDING_ID,
-    enabled: cfg.enabled,
-    bot_token: cfg.botToken.trim(),
-    chat_id: String(cfg.chatId).trim(),
+    enabled: clean.enabled,
+    bot_token: clean.botToken,
+    chat_id: clean.chatId,
     updated_at: new Date().toISOString(),
   } as never);
-  if (error) console.error("Failed to save Telegram settings:", error);
-  return !error;
+  if (!error) return true;
+
+  // Table missing (or not writable): fall back to the owner's account profile.
+  console.warn("telegram_secrets unavailable, saving to the account profile instead:", error);
+  const { error: profileError } = await supabase.auth.updateUser({ data: { telegram: clean } });
+  if (profileError) console.error("Failed to save Telegram settings:", profileError);
+  return !profileError;
 };

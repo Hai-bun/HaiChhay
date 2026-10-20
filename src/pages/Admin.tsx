@@ -103,7 +103,7 @@ const Admin = () => {
     if (success) {
       const tgSaved = await saveTelegramConfig(data.telegramConfig);
       if (tgSaved) toast.success("Settings saved successfully!");
-      else toast.warning("Settings saved, but the Telegram settings were NOT saved. Run the telegram_secrets migration first.");
+      else toast.warning("Settings saved, but the Telegram settings could not be saved. Check that you are still signed in, then press Save again.");
       // Reload data from database to ensure persistence
       const updated = await getWeddingData();
       updated.telegramConfig = (await getTelegramConfig()) ?? data.telegramConfig;

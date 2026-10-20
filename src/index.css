@@ -3641,3 +3641,48 @@ html[data-border-color] .lm-card { border-color: var(--user-border); }
 
 @media (prefers-reduced-motion: reduce) { .lf-photo img, .lf-pin { animation: none; } }
 .animations-off .lf-photo img, .animations-off .lf-pin { animation: none; }
+
+/* ---------- Loading screen: wears the invitation's theme and template ---------- */
+.inv-loader {
+  position: relative; overflow: hidden; min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.1rem;
+  padding: 2rem 1.5rem; text-align: center; color: hsl(var(--foreground));
+  background:
+    radial-gradient(ellipse at 15% 8%, hsl(var(--primary) / 0.2), transparent 55%),
+    radial-gradient(ellipse at 88% 92%, hsl(var(--accent) / 0.22), transparent 55%),
+    hsl(var(--background));
+}
+.inv-loader-glow { position: absolute; width: 22rem; height: 22rem; border-radius: 9999px; filter: blur(60px); opacity: 0.45; pointer-events: none; animation: inv-glow 6s ease-in-out infinite alternate; }
+.inv-loader-glow-a { top: -6rem; left: -6rem; background: hsl(var(--primary) / 0.5); }
+.inv-loader-glow-b { bottom: -7rem; right: -6rem; background: hsl(var(--accent) / 0.5); animation-delay: -3s; }
+@keyframes inv-glow { from { transform: scale(0.9); } to { transform: scale(1.15); } }
+
+.inv-loader-mark { position: relative; width: 5.6rem; height: 5.6rem; display: flex; align-items: center; justify-content: center; color: hsl(var(--primary)); }
+.inv-loader-ring { position: absolute; inset: 0; border-radius: 9999px; border: 2px solid transparent; border-top-color: hsl(var(--primary)); border-right-color: hsl(var(--primary) / 0.35); animation: inv-spin 1.4s linear infinite; }
+.inv-loader-ring-2 { inset: 0.55rem; border-top-color: hsl(var(--accent)); border-right-color: hsl(var(--accent) / 0.3); animation-duration: 2.1s; animation-direction: reverse; }
+@keyframes inv-spin { to { transform: rotate(360deg); } }
+
+.inv-loader-names { font-size: clamp(1.8rem, 7vw, 2.6rem); line-height: 1.25; max-width: 90%; color: hsl(var(--foreground)); }
+.inv-loader-names span { color: hsl(var(--primary)); font-style: italic; }
+.inv-loader-text { font-family: var(--font-serif); font-size: 1rem; letter-spacing: 0.04em; color: hsl(var(--muted-foreground)); }
+.inv-loader-bar { width: min(14rem, 60vw); height: 3px; border-radius: 9999px; overflow: hidden; background: hsl(var(--primary) / 0.18); }
+.inv-loader-bar i { display: block; height: 100%; width: 40%; border-radius: inherit; background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent))); animation: inv-bar 1.4s ease-in-out infinite; }
+@keyframes inv-bar { from { transform: translateX(-110%); } to { transform: translateX(260%); } }
+
+/* Aurora (Motion Showcase): plum + gold, like its hero */
+.inv-loader.template-aurora {
+  color: #fff;
+  background:
+    radial-gradient(ellipse at 50% 35%, rgba(150, 60, 110, 0.55), transparent 65%),
+    radial-gradient(circle at 15% 85%, rgba(224, 168, 74, 0.22), transparent 45%),
+    radial-gradient(circle at 85% 15%, rgba(224, 168, 74, 0.22), transparent 45%),
+    #2a0f22;
+}
+.template-aurora.inv-loader .inv-loader-names { color: #fff; }
+.template-aurora.inv-loader .inv-loader-names span, .template-aurora.inv-loader .inv-loader-mark { color: #f5cf6b; }
+.template-aurora.inv-loader .inv-loader-text { color: rgba(255, 255, 255, 0.75); }
+.template-aurora.inv-loader .inv-loader-ring { border-top-color: #f5cf6b; border-right-color: rgba(245, 207, 107, 0.35); }
+.template-aurora.inv-loader .inv-loader-ring-2 { border-top-color: #fff; border-right-color: rgba(255, 255, 255, 0.3); }
+.template-aurora.inv-loader .inv-loader-bar { background: rgba(255, 255, 255, 0.18); }
+.template-aurora.inv-loader .inv-loader-bar i { background: linear-gradient(90deg, #f5cf6b, #fff); }
+@media (prefers-reduced-motion: reduce) { .inv-loader-ring, .inv-loader-glow, .inv-loader-bar i { animation: none; } .inv-loader-bar i { width: 100%; } }

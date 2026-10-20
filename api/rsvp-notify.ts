@@ -19,12 +19,33 @@ export default async function handler(req: any, res: any) {
     return res.status(400).json({ ok: false, description: "Invalid request" });
   }
 
-  const q = await fetch(
-    `${url}/rest/v1/telegram_secrets?wedding_id=eq.${WEDDING_ID}&select=enabled,bot_token,chat_id`,
-    { headers: { apikey: key, Authorization: `Bearer ${key}` } },
-  );
-  const rows = q.ok ? await q.json() : [];
-  const cfg = rows[0];
+  // 1) the telegram_secrets table; 2) if it does not exist yet, the owner's account
+  //    profile (user_metadata.telegram), read with the service-role key.
+  const headers = { apikey: key, Authorization: `Bearer ${key}` };
+  let cfg: { enabled?: boolean; bot_token?: string; chat_id?: string } | undefined;
+  try {
+    const q = await fetch(
+      `${url}/rest/v1/telegram_secrets?wedding_id=eq.${WEDDING_ID}&select=enabled,bot_token,chat_id`,
+      { headers },
+    );
+    const rows = q.ok ? await q.json() : [];
+    cfg = Array.isArray(rows) ? rows[0] : undefined;
+  } catch {
+    cfg = undefined;
+  }
+  if (!cfg) {
+    try {
+      const p = await fetch(`${url}/rest/v1/wedding_profiles?id=eq.${WEDDING_ID}&select=user_id`, { headers });
+      const owner = (await p.json())?.[0]?.user_id;
+      if (owner) {
+        const u = await fetch(`${url}/auth/v1/admin/users/${encodeURIComponent(owner)}`, { headers });
+        const t = (await u.json())?.user_metadata?.telegram;
+        if (t) cfg = { enabled: !!t.enabled, bot_token: t.botToken, chat_id: String(t.chatId ?? "") };
+      }
+    } catch {
+      /* fall through to "off" */
+    }
+  }
   if (!cfg?.enabled || !cfg.bot_token || !cfg.chat_id) {
     return res.status(200).json({ ok: false, description: "Telegram notifications are off" });
   }
