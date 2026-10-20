@@ -39,7 +39,7 @@ import {
   ScrollText,
 } from "lucide-react";
 import { toast } from "sonner";
-import { formatWeddingDate } from "@/lib/weddingFormat";
+import { getDateParts, toKhmerDigits } from "@/lib/weddingFormat";
 import {
   getWeddingData,
   saveWeddingData,
@@ -180,19 +180,26 @@ const Admin = () => {
     if (!data) return;
     const groom = data.groomNameKh || data.groomName;
     const bride = data.brideNameKh || data.brideName;
-    const date = data.weddingDate ? formatWeddingDate(data.weddingDate, "km") : "";
+    let date = "";
+    if (data.weddingDate) {
+      const p = getDateParts(data.weddingDate, "km");
+      date = `${toKhmerDigits(String(Number(p.day)))} ខែ ${p.month} ឆ្នាំ ${p.year}`;
+    }
     const text =
       `សូមគោរពអញ្ជើញ ${guest.name}
 
 ` +
-      `យើងខ្ញុំមានកិត្តិយសសូមអញ្ជើញចូលរួមក្នុងពិធីអាពាហ៍ពិពាហ៍របស់ ${groom} និង ${bride}` +
-      (date ? ` នៅថ្ងៃ ${date}` : "") +
+      `យើងខ្ញុំមានកិត្តិយសសូមអញ្ជើញ លោក/លោកស្រី អញ្ជើញចូលរួមជាអធិបតី
+` +
+      `ក្នុងពិធីអាពាហ៍ពិពាហ៍របស់យើងខ្ញុំ ${groom} និង ${bride}` +
+      (date ? `
+នៅថ្ងៃទី ${date}` : "") +
       `
 
-សូមចុចតំណខាងក្រោមដើម្បីមើលសំបុត្រអញ្ជើញ ទីតាំង កម្មវិធី និងបញ្ជាក់ការចូលរួម៖
+សូមចុចតំណខាងក្រោមដើម្បីមើលសំបុត្រអញ្ជើញ ទីតាំង និងកម្មវិធីលម្អិត៖
 ${guest.inviteUrl}
 
-សូមអរគុណ 🙏`;
+សូមអរគុណ និងសូមរង់ចាំទទួលភ្ញៀវកិត្តិយស 🙏`;
     navigator.clipboard.writeText(text);
     toast.success("Invitation message copied!");
   };
