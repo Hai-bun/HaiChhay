@@ -21,7 +21,6 @@ const ITEMS = [
   { id: "rsvp", key: "navRsvp", icon: MailCheck },
 ] as const;
 
-const firstWord = (s: string) => s.trim().split(/\s+/)[0] ?? "";
 
 /**
  * Sticky top bar with smooth-scroll links to each section and a scroll-spy
@@ -84,17 +83,6 @@ export const HeaderNav = ({ weddingData, language }: HeaderNavProps) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const groom =
-    language === "km" && weddingData.groomNameKh ? weddingData.groomNameKh : weddingData.groomName;
-  const bride =
-    language === "km" && weddingData.brideNameKh ? weddingData.brideNameKh : weddingData.brideName;
-  // Nicknames set in Admin (e.g. "HAI" / "CHHAY", "ហៃ" / "ឆាយ"); otherwise the
-  // first word of each name.
-  const nb = weddingData.navBrand ?? {};
-  const brandGroom =
-    (language === "km" ? nb.groomKh : nb.groom)?.trim() || firstWord(groom);
-  const brandBride =
-    (language === "km" ? nb.brideKh : nb.bride)?.trim() || firstWord(bride);
   const links = [{ id: "top", label: t.navHome, icon: Home as LucideIcon }].concat(
     ITEMS.filter((i) => present.includes(i.id)).map((i) => ({
       id: i.id,
@@ -105,11 +93,6 @@ export const HeaderNav = ({ weddingData, language }: HeaderNavProps) => {
 
   return (
     <header className="header-nav" role="navigation" aria-label="Invitation sections">
-      <button type="button" className="header-nav-brand" onClick={() => go("top")}>
-        <span>
-          {brandGroom} <span aria-hidden="true">💙</span> {brandBride}
-        </span>
-      </button>
       <div ref={listRef} className="header-nav-links">
         {links.map((l) => (
           <button
