@@ -176,7 +176,7 @@ const Admin = () => {
   };
 
   // A ready-to-send message (Khmer) with the guest's own name and link.
-  const copyInviteMessage = (guest: Guest) => {
+  const copyInviteMessage = async (guest: Guest) => {
     if (!data) return;
     const groom = data.groomNameKh || data.groomName;
     const bride = data.brideNameKh || data.brideName;
@@ -185,22 +185,36 @@ const Admin = () => {
       const p = getDateParts(data.weddingDate, "km");
       date = `${toKhmerDigits(String(Number(p.day)))} ខែ ${p.month} ឆ្នាំ ${p.year}`;
     }
-    const text =
-      `សូមគោរពអញ្ជើញ ${guest.name}
-
-` +
-      `យើងខ្ញុំមានកិត្តិយសសូមអញ្ជើញ លោក/លោកស្រី អញ្ជើញចូលរួមជាអធិបតី
-` +
-      `ក្នុងពិធីអាពាហ៍ពិពាហ៍របស់យើងខ្ញុំ ${groom} និង ${bride}` +
-      (date ? `
-នៅថ្ងៃទី ${date}` : "") +
-      `
-
-សូមចុចតំណខាងក្រោមដើម្បីមើលសំបុត្រអញ្ជើញ ទីតាំង និងកម្មវិធីលម្អិត៖
-${guest.inviteUrl}
-
-សូមអរគុណ និងសូមរង់ចាំទទួលភ្ញៀវកិត្តិយស 🙏`;
-    navigator.clipboard.writeText(text);
+    // Plain text for apps that ignore formatting, plus HTML so the guest name,
+    // couple names and date stay bold when pasted into apps that keep it.
+    const esc = (v: string) => v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const lines = (bold: (v: string) => string) =>
+      [
+        `សូមគោរពអញ្ជើញ ${bold(guest.name)}`,
+        "",
+        "យើងខ្ញុំមានកិត្តិយសសូមអញ្ជើញ លោក/លោកស្រី អញ្ជើញចូលរួមជាអធិបតី",
+        `ក្នុងពិធីអាពាហ៍ពិពាហ៍របស់យើងខ្ញុំ ${bold(groom)} និង ${bold(bride)}`,
+        ...(date ? [`នៅថ្ងៃទី ${bold(date)}`] : []),
+        "",
+        "សូមចុចតំណខាងក្រោមដើម្បីមើលសំបុត្រអញ្ជើញ ទីតាំង និងកម្មវិធីលម្អិត៖",
+        guest.inviteUrl,
+        "",
+        "សូមអរគុណ និងសូមរង់ចាំទទួលភ្ញៀវកិត្តិយស 🙏",
+      ];
+    const text = lines((v) => v).join("\n");
+    const html = lines((v) => `<b>${esc(v)}</b>`)
+      .map((l) => (l.startsWith("http") ? `<a href="${esc(l)}">${esc(l)}</a>` : l))
+      .join("<br>");
+    try {
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          "text/plain": new Blob([text], { type: "text/plain" }),
+          "text/html": new Blob([html], { type: "text/html" }),
+        }),
+      ]);
+    } catch {
+      await navigator.clipboard.writeText(text);
+    }
     toast.success("Invitation message copied!");
   };
 
