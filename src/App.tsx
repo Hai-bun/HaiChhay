@@ -2,7 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useLayoutEffect } from "react";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import LanguageProvider from "./lib/LanguageProvider";
 import Index from "./pages/Index";
 import Admin from "./pages/Admin";
@@ -14,6 +15,16 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+// A new page always starts at the top. Without this, opening the invitation from the
+// (scrolled) invite page landed part-way down the hero and skipped its opening animation.
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -21,6 +32,7 @@ const App = () => (
       <Sonner />
       <LanguageProvider>
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route
