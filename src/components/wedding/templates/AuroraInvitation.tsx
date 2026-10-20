@@ -276,11 +276,11 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
 
         <div className="mo-hero-inner">
           {guest && (
-            <p className={cn("mo-pill", fade("animate-fade-in-up delay-700"))}>
+            <p className={cn("mo-pill", fade("mo-pill-fx"))}>
               {t.welcomeGuest}, {guest.name}
             </p>
           )}
-          <p className={cn("mo-kicker", fade("animate-fade-in-up delay-700"))}>{t.weInviteYou}</p>
+          <p className={cn("mo-kicker", fade("mo-kicker-fx"))}>{t.weInviteYou}</p>
 
           <h1 ref={nameRef} className="mo-name">
             <SplitName text={groom} start={4} on={animOn} />
