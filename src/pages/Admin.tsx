@@ -183,7 +183,7 @@ const Admin = () => {
     let date = "";
     if (data.weddingDate) {
       const p = getDateParts(data.weddingDate, "km");
-      date = `${toKhmerDigits(String(Number(p.day)))} ខែ ${p.month} ឆ្នាំ ${p.year}`;
+      date = `${toKhmerDigits(new Date(`${data.weddingDate}T00:00:00`).getDate())} ខែ ${p.month} ឆ្នាំ ${p.year}`;
     }
     // Plain text for apps that ignore formatting, plus HTML so the guest name,
     // couple names and date stay bold when pasted into apps that keep it.
@@ -879,44 +879,6 @@ const Admin = () => {
                     </div>
                   )}
                 </div>
-                <div className="space-y-4 rounded-lg border border-border p-4">
-                  <div>
-                    <Label className="text-base">Header names</Label>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Short names shown in the header bar as “HAI 💙 CHHAY”.
-                      Leave empty to use the first word of each name.
-                    </p>
-                  </div>
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    {(
-                      [
-                        ["groom", "Groom (English)", "HAI"],
-                        ["bride", "Bride (English)", "CHHAY"],
-                        ["groomKh", "Groom (Khmer)", "ហៃ"],
-                        ["brideKh", "Bride (Khmer)", "ឆាយ"],
-                      ] as const
-                    ).map(([key, label, placeholder]) => (
-                      <div key={key} className="space-y-1">
-                        <Label htmlFor={`navBrand-${key}`}>{label}</Label>
-                        <Input
-                          id={`navBrand-${key}`}
-                          value={data.navBrand?.[key] ?? ""}
-                          placeholder={placeholder}
-                          onChange={(e) =>
-                            setData({
-                              ...data,
-                              navBrand: {
-                                ...data.navBrand,
-                                [key]: e.target.value,
-                              },
-                            })
-                          }
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
                 <div className="rounded-lg border border-border p-4">
                   <ImageSlotPicker
                     label="Cover seal photo"
