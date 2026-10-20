@@ -29,6 +29,10 @@ export interface Translations {
   // Location Section
   eventLocation: string;
   getDirections: string;
+  locationTagline: string;
+  locationHeading: string;
+  locationTagline2: string;
+  locationFooter: string;
   
   // Gallery Section
   ourStory: string;
@@ -118,6 +122,10 @@ const translations: Record<Language, Translations> = {
     // Location Section
     eventLocation: 'Event Location',
     getDirections: 'Get Directions',
+    locationTagline: 'Where we will become one',
+    locationHeading: 'Location',
+    locationTagline2: 'Where we begin our forever',
+    locationFooter: "We can't wait to celebrate our love with you.",
     
     // Gallery Section
     ourStory: 'Our Story',
@@ -205,6 +213,10 @@ const translations: Record<Language, Translations> = {
     // Location Section
     eventLocation: 'ទីតាំងពិធី',
     getDirections: 'បង្ហាញផ្លូវ',
+    locationTagline: 'ទីកន្លែងដែលយើងទាំងពីរនឹងក្លាយជាមួយគ្នា',
+    locationHeading: 'ទីតាំង',
+    locationTagline2: 'ទីកន្លែងដែលយើងចាប់ផ្តើមអនាគតជារៀងរហូត',
+    locationFooter: 'យើងរង់ចាំអបអរសាទរក្តីស្រឡាញ់របស់យើងជាមួយលោកអ្នក។',
     
     // Gallery Section
     ourStory: 'រឿងរ៉ាវរបស់យើង',

@@ -81,6 +81,7 @@ export const TemplateSections = ({
         eventAddressKh={weddingData.eventAddressKh}
         eventMapUrl={weddingData.eventMapUrl}
         image={getLocationImage(weddingData)}
+        variant={weddingData.locationStyle}
         language={language}
       />
     ),

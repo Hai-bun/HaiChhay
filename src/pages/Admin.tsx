@@ -54,6 +54,7 @@ import { uploadWeddingImage, deleteWeddingImage } from "@/lib/storage";
 import { ThemeSelector } from "@/components/admin/ThemeSelector";
 import { ImageCropDialog } from "@/components/admin/ImageCropDialog";
 import { FloralDecorSelector } from "@/components/admin/FloralDecorSelector";
+import { LocationStyleSelector } from "@/components/admin/LocationStyleSelector";
 import { GalleryLayoutSelector } from "@/components/admin/GalleryLayoutSelector";
 import { ImageSlotPicker } from "@/components/admin/ImageSlotPicker";
 import { ImageMultiPicker } from "@/components/admin/ImageMultiPicker";
@@ -714,6 +715,18 @@ const Admin = () => {
                   <FloralDecorSelector
                     value={data.floralDecor ?? "none"}
                     onChange={(floralDecor) => setData({ ...data, floralDecor })}
+                  />
+                </div>
+                <div className="space-y-3 rounded-lg border border-border p-4">
+                  <div>
+                    <Label className="text-base">Location style</Label>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      How the map and the location photo are laid out.
+                    </p>
+                  </div>
+                  <LocationStyleSelector
+                    value={data.locationStyle ?? "card"}
+                    onChange={(locationStyle) => setData({ ...data, locationStyle })}
                   />
                 </div>
                 <div className="rounded-lg border border-border p-4">

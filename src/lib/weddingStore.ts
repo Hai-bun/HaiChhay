@@ -22,6 +22,8 @@ export type TemplateType =
 
 export type FloralDecor = "none" | "roses" | "botanical";
 
+export type LocationStyle = "card" | "framed" | "mapcard";
+
 export type GalleryLayout =
   | "default"
   | "rhythm"
@@ -123,6 +125,8 @@ export interface WeddingData {
   /** How the photo gallery is laid out ("default" = the template's own gallery). */
   galleryLayout: GalleryLayout;
   floralDecor: FloralDecor;
+  /** Layout of the Location section. */
+  locationStyle: LocationStyle;
   /** Background song (mp3 URL); empty = no music. */
   musicUrl: string;
   /** Sticky header navigation on the invitation (can be turned off in Admin). */
@@ -261,6 +265,7 @@ const DEFAULT_WEDDING_DATA: WeddingData = {
   customFonts: [],
   galleryLayout: "default",
   floralDecor: "none",
+  locationStyle: "card",
   musicUrl: "",
   showHeaderNav: true,
   textColors: {},
@@ -444,6 +449,7 @@ const buildWeddingProfileRow = (
     customFonts: weddingData.customFonts,
     galleryLayout: weddingData.galleryLayout,
     floralDecor: weddingData.floralDecor,
+    locationStyle: weddingData.locationStyle,
     musicUrl: weddingData.musicUrl,
     showHeaderNav: weddingData.showHeaderNav,
     textColors: weddingData.textColors,
@@ -531,6 +537,9 @@ const mapProfileToWeddingData = (
     floralDecor:
       (profile.welcome_popup as { floralDecor?: FloralDecor })?.floralDecor ??
       DEFAULT_WEDDING_DATA.floralDecor,
+    locationStyle:
+      (profile.welcome_popup as { locationStyle?: LocationStyle })?.locationStyle ??
+      DEFAULT_WEDDING_DATA.locationStyle,
     musicUrl:
       (profile.welcome_popup as { musicUrl?: string })?.musicUrl ??
       DEFAULT_WEDDING_DATA.musicUrl,

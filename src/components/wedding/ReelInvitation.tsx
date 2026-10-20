@@ -61,6 +61,7 @@ export const ReelInvitation = ({
         eventAddress={weddingData.eventAddress}
         eventMapUrl={weddingData.eventMapUrl}
         image={getLocationImage(weddingData)}
+        variant={weddingData.locationStyle}
         language={language}
       />
     ),
