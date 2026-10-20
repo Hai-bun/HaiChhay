@@ -22,12 +22,14 @@ export default async function handler(req: any, res: any) {
   // 1) the telegram_secrets table; 2) if it does not exist yet, the owner's account
   //    profile (user_metadata.telegram), read with the service-role key.
   const headers = { apikey: key, Authorization: `Bearer ${key}` };
+  let tableStatus = 0;
   let cfg: { enabled?: boolean; bot_token?: string; chat_id?: string } | undefined;
   try {
     const q = await fetch(
       `${url}/rest/v1/telegram_secrets?wedding_id=eq.${WEDDING_ID}&select=enabled,bot_token,chat_id`,
       { headers },
     );
+    tableStatus = q.status;
     const rows = q.ok ? await q.json() : [];
     cfg = Array.isArray(rows) ? rows[0] : undefined;
   } catch {
@@ -47,7 +49,9 @@ export default async function handler(req: any, res: any) {
     }
   }
   if (!cfg?.enabled || !cfg.bot_token || !cfg.chat_id) {
-    return res.status(200).json({ ok: false, description: "Telegram notifications are off" });
+    // Which step failed (no secrets): 401/403 = the key is rejected, 200 + no row = nothing saved.
+    const why = !cfg ? `no settings found (telegram_secrets HTTP ${tableStatus})` : !cfg.enabled ? "switched off in Admin" : "bot token or chat id is empty";
+    return res.status(200).json({ ok: false, description: `Telegram notifications are off: ${why}` });
   }
 
   const text =
