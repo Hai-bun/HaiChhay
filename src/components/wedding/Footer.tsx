@@ -49,7 +49,8 @@ export const Footer = ({ groomName, brideName, groomNameKh, brideNameKh, socialL
         {lang === "km" ? "និង" : "&"}{" "}
         {lang === "km" && brideNameKh ? brideNameKh : brideName}
       </p>
-      <p className="text-sm text-muted-foreground mb-6">
+      <h3 className="font-serif text-lg font-semibold text-foreground mb-2">{t.thankYouTitle}</h3>
+      <p className="text-sm leading-relaxed text-muted-foreground mb-6 max-w-xl mx-auto">
         {t.thankYou}
       </p>
 

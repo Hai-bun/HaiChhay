@@ -98,7 +98,7 @@ export const ReelInvitation = ({
     location: t.eventLocation,
     rsvp: t.rsvpTitle,
     gift: t.weddingGift,
-    footer: t.thankYou,
+    footer: t.thankYouTitle,
   };
 
   // The gift chapter is skipped entirely when the couple has turned gifts off.
