@@ -25,6 +25,19 @@ export const SpotlightGallery = ({ photos, language, onOpen }: SpotlightGalleryP
   const drag = useRef<{ x: number; moved: boolean } | null>(null);
   const count = photos.length;
 
+  // Start rotating only once the guest scrolls it into view (and pause off-screen).
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return;
+    }
+    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.35 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   const go = useCallback(
     (to: number) => setIndex(((to % count) + count) % count),
     [count],
@@ -39,14 +52,14 @@ export const SpotlightGallery = ({ photos, language, onOpen }: SpotlightGalleryP
 
   // Re-armed on every change of index, so a manual move gets a full interval.
   useEffect(() => {
-    if (!autoplay || paused || count < 2) return;
+    if (!autoplay || !inView || paused || count < 2) return;
     const id = window.setTimeout(() => go(index + 1), INTERVAL_MS);
     return () => window.clearTimeout(id);
-  }, [autoplay, paused, index, count, go]);
+  }, [autoplay, inView, paused, index, count, go]);
 
   if (count === 0) return null;
   const num = (n: number) => localizeDigits(String(n).padStart(2, "0"), language);
-  const running = autoplay && !paused && count > 1;
+  const running = autoplay && inView && !paused && count > 1;
 
   return (
     <div

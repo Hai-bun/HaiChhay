@@ -23,6 +23,19 @@ export const PolaroidStack = ({ photos, language }: PolaroidStackProps) => {
   const rootRef = useRef<HTMLElement>(null);
   const n = photos.length;
 
+  // Start rotating only once the guest scrolls it into view (and pause off-screen).
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return;
+    }
+    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.35 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   useEffect(() => {
     const off =
       window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
@@ -31,10 +44,10 @@ export const PolaroidStack = ({ photos, language }: PolaroidStackProps) => {
   }, []);
 
   useEffect(() => {
-    if (!autoplay || paused || n < 2) return;
+    if (!autoplay || !inView || paused || n < 2) return;
     const id = window.setTimeout(() => setStep((s) => s + 1), INTERVAL_MS);
     return () => window.clearTimeout(id);
-  }, [autoplay, paused, n, step]);
+  }, [autoplay, inView, paused, n, step]);
 
   // Warm the next photo that is about to join the pile.
   useEffect(() => {
