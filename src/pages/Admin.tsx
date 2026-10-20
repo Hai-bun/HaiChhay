@@ -23,6 +23,7 @@ import {
   Gift,
   Crop,
   Copy,
+  Send,
   Trash2,
   Plus,
   ExternalLink,
@@ -38,6 +39,7 @@ import {
   ScrollText,
 } from "lucide-react";
 import { toast } from "sonner";
+import { formatWeddingDate } from "@/lib/weddingFormat";
 import {
   getWeddingData,
   saveWeddingData,
@@ -171,6 +173,28 @@ const Admin = () => {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     toast.success("Link copied to clipboard!");
+  };
+
+  // A ready-to-send message (Khmer) with the guest's own name and link.
+  const copyInviteMessage = (guest: Guest) => {
+    if (!data) return;
+    const groom = data.groomNameKh || data.groomName;
+    const bride = data.brideNameKh || data.brideName;
+    const date = data.weddingDate ? formatWeddingDate(data.weddingDate, "km") : "";
+    const text =
+      `សូមគោរពអញ្ជើញ ${guest.name}
+
+` +
+      `យើងខ្ញុំមានកិត្តិយសសូមអញ្ជើញចូលរួមក្នុងពិធីអាពាហ៍ពិពាហ៍របស់ ${groom} និង ${bride}` +
+      (date ? ` នៅថ្ងៃ ${date}` : "") +
+      `
+
+សូមចុចតំណខាងក្រោមដើម្បីមើលសំបុត្រអញ្ជើញ ទីតាំង កម្មវិធី និងបញ្ជាក់ការចូលរួម៖
+${guest.inviteUrl}
+
+សូមអរគុណ 🙏`;
+    navigator.clipboard.writeText(text);
+    toast.success("Invitation message copied!");
   };
 
   const addScheduleItem = () => {
@@ -673,8 +697,16 @@ const Admin = () => {
                           <Button
                             variant="outline"
                             size="sm"
+                            title="Copy link"
                             onClick={() => copyToClipboard(guest.inviteUrl)}>
                             <Copy className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            title="Copy invitation message"
+                            onClick={() => copyInviteMessage(guest)}>
+                            <Send className="w-4 h-4" />
                           </Button>
                           <Button
                             variant="outline"
