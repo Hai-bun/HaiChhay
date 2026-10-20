@@ -446,6 +446,7 @@ const WeddingDetail = () => {
 
       {/* RSVP Section */}
       <RSVPSection
+        enabled={weddingData.rsvpEnabled !== false}
         guestId={guest?.id}
         guestName={guest?.name}
         language={language}

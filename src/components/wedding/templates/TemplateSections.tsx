@@ -95,6 +95,7 @@ export const TemplateSections = ({
     ),
     rsvp: (
       <RSVPSection
+        enabled={weddingData.rsvpEnabled !== false}
         guestId={guest?.id}
         guestName={guest?.name}
         language={language}

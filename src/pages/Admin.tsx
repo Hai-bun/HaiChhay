@@ -113,21 +113,47 @@ const Admin = () => {
     }
   };
 
+  // Several guests at once: separate the names with ";" (or one per line).
   const handleAddGuest = async () => {
-    if (!newGuestName.trim() || !data) {
+    if (!data) return;
+    const seen = new Set<string>();
+    const names = newGuestName
+      .split(/[;；\n]+/)
+      .map((n) => n.trim())
+      .filter((n) => {
+        const key = n.toLowerCase();
+        if (!n || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
+      .slice(0, 100);
+
+    if (names.length === 0) {
       toast.error("Please enter a guest name");
       return;
     }
 
-    const guest = await addGuest(newGuestName.trim());
-    if (!guest) {
-      toast.error("Unable to add guest. Please try again.");
-      return;
+    const added: Guest[] = [];
+    const failed: string[] = [];
+    for (const name of names) {
+      const guest = await addGuest(name);
+      if (guest) added.push(guest);
+      else failed.push(name);
     }
 
-    setData({ ...data, guests: [...data.guests, guest] });
-    setNewGuestName("");
-    toast.success("Guest added successfully!");
+    if (added.length > 0) {
+      setData((prev) => (prev ? { ...prev, guests: [...prev.guests, ...added] } : prev));
+    }
+    // Keep only the names that failed in the box so they can be retried.
+    setNewGuestName(failed.join("; "));
+
+    if (failed.length === 0) {
+      toast.success(added.length === 1 ? "Guest added successfully!" : `${added.length} guests added`);
+    } else if (added.length === 0) {
+      toast.error("Unable to add guests. Please try again.");
+    } else {
+      toast.warning(`${added.length} added, ${failed.length} failed: ${failed.join(", ")}`);
+    }
   };
 
   const handleDeleteGuest = async (id: string) => {
@@ -611,7 +637,7 @@ const Admin = () => {
                 {/* Add Guest */}
                 <div className="flex gap-3">
                   <Input
-                    placeholder="Enter guest name (e.g., Mr. Sok Dara)"
+                    placeholder="Guest name, or several separated by ;  (e.g., Mr. Sok Dara; Mrs. Chan Nary)"
                     value={newGuestName}
                     onChange={(e) => setNewGuestName(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleAddGuest()}
@@ -702,6 +728,22 @@ const Admin = () => {
                     onCheckedChange={(checked) =>
                       setData({ ...data, showHeaderNav: checked })
                     }
+                  />
+                </div>
+                <div className="flex items-start justify-between gap-4 rounded-lg border border-border p-4">
+                  <div>
+                    <Label htmlFor="rsvpEnabled" className="text-base">
+                      RSVP section
+                    </Label>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      The attendance form and guest wishes near the end of the
+                      invitation. Turn off to hide it (and its menu link).
+                    </p>
+                  </div>
+                  <Switch
+                    id="rsvpEnabled"
+                    checked={data.rsvpEnabled ?? true}
+                    onCheckedChange={(checked) => setData({ ...data, rsvpEnabled: checked })}
                   />
                 </div>
                 <div className="space-y-3 rounded-lg border border-border p-4">

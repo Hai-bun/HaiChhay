@@ -147,6 +147,8 @@ export interface WeddingData {
   // KHQR Gift
   khqrImage: string;
   giftEnabled: boolean;
+  /** Show the RSVP (attendance + wishes) section. */
+  rsvpEnabled: boolean;
 
   // Guests
   guests: Guest[];
@@ -275,6 +277,7 @@ const DEFAULT_WEDDING_DATA: WeddingData = {
   monogramImage: "",
   khqrImage: "",
   giftEnabled: true,
+  rsvpEnabled: true,
   guests: [],
   rsvpResponses: [],
   socialLinks: {
@@ -449,6 +452,7 @@ const buildWeddingProfileRow = (
     customFonts: weddingData.customFonts,
     galleryLayout: weddingData.galleryLayout,
     floralDecor: weddingData.floralDecor,
+    rsvpEnabled: weddingData.rsvpEnabled,
     locationStyle: weddingData.locationStyle,
     musicUrl: weddingData.musicUrl,
     showHeaderNav: weddingData.showHeaderNav,
@@ -537,6 +541,9 @@ const mapProfileToWeddingData = (
     floralDecor:
       (profile.welcome_popup as { floralDecor?: FloralDecor })?.floralDecor ??
       DEFAULT_WEDDING_DATA.floralDecor,
+    rsvpEnabled:
+      (profile.welcome_popup as { rsvpEnabled?: boolean })?.rsvpEnabled ??
+      DEFAULT_WEDDING_DATA.rsvpEnabled,
     locationStyle:
       (profile.welcome_popup as { locationStyle?: LocationStyle })?.locationStyle ??
       DEFAULT_WEDDING_DATA.locationStyle,

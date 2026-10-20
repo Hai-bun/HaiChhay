@@ -67,6 +67,7 @@ export const ReelInvitation = ({
     ),
     rsvp: (
       <RSVPSection
+        enabled={weddingData.rsvpEnabled !== false}
         guestId={guest?.id}
         guestName={guest?.name}
         language={language}
@@ -105,7 +106,8 @@ export const ReelInvitation = ({
     (key) =>
       key !== "hero" &&
       sectionNodes[key] !== undefined &&
-      (key !== "gift" || weddingData.giftEnabled),
+      (key !== "gift" || weddingData.giftEnabled) &&
+      (key !== "rsvp" || weddingData.rsvpEnabled !== false),
   );
 
   const { active, setRef, scrollTo } = useChapterTracker(chapterKeys.length);

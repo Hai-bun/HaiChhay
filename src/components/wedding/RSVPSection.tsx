@@ -12,12 +12,15 @@ import { getTranslations, Language, getStoredLanguage } from "@/lib/i18n";
 interface RSVPSectionProps {
   guestId?: string;
   guestName?: string;
+  /** Admin switch: false hides the whole section (default true). */
+  enabled?: boolean;
   language?: Language;
 }
 
 export const RSVPSection = ({
   guestId,
   guestName,
+  enabled = true,
   language,
 }: RSVPSectionProps) => {
   const [attending, setAttending] = useState<string>("yes");
@@ -27,6 +30,8 @@ export const RSVPSection = ({
 
   const lang = language || getStoredLanguage();
   const t = getTranslations(lang);
+
+  if (!enabled) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
