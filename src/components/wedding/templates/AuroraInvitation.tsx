@@ -291,7 +291,7 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
       </section>
 
       {/* ---------- Save the Date: tilted polaroid + date + countdown ---------- */}
-      <section className="mo-save">
+      <section id="save-the-date" className="mo-save">
         <div className="mo-sparkles" aria-hidden="true">
           {SPARKLES.map((s, i) => (
             <svg

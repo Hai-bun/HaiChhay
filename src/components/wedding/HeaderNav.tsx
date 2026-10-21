@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Home, Heart, BookHeart, MapPin, Clock, Images, Gift, MailCheck, type LucideIcon } from "lucide-react";
+import { Home, CalendarHeart, Heart, BookHeart, MapPin, Clock, Images, Gift, MailCheck, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getTranslations, type Language } from "@/lib/i18n";
 import type { WeddingData } from "@/lib/weddingStore";
@@ -12,6 +12,7 @@ interface HeaderNavProps {
 // Sections that can appear in the bar, in page order. Only the ones actually
 // rendered on the page (matched by id) get a link.
 const ITEMS = [
+  { id: "save-the-date", key: "navSaveDate", icon: CalendarHeart },
   { id: "couple", key: "navCouple", icon: Heart },
   { id: "story", key: "navStory", icon: BookHeart },
   { id: "location", key: "navLocation", icon: MapPin },

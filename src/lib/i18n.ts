@@ -81,6 +81,7 @@ export interface Translations {
   navStory: string;
   navLocation: string;
   navSchedule: string;
+  navSaveDate: string;
   navGallery: string;
   navGift: string;
   navRsvp: string;
@@ -178,6 +179,7 @@ const translations: Record<Language, Translations> = {
     navStory: 'Story',
     navLocation: 'Location',
     navSchedule: 'Schedule',
+    navSaveDate: 'Save the Date',
     navGallery: 'Gallery',
     navGift: 'Gift',
     navRsvp: 'RSVP',
@@ -273,6 +275,7 @@ const translations: Record<Language, Translations> = {
     navStory: 'រឿងរបស់យើង',
     navLocation: 'ទីតាំង',
     navSchedule: 'កាលវិភាគ',
+    navSaveDate: 'កក់ទុកថ្ងៃ',
     navGallery: 'វិចិត្រសាល',
     navGift: 'អំណោយ',
     navRsvp: 'ចូលរួម',
