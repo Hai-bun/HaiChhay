@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { FloatingPetals } from "@/components/ui/FloatingPetals";
 import { t } from "@/lib/i18n";
 import { OrnamentDivider } from "@/components/ui/OrnamentDivider";
-import { Heart, Sparkles, Settings, Eye, Users, Palette } from "lucide-react";
+import { Heart, Sparkles, Settings, Users, Palette } from "lucide-react";
 import heroBackground from "@/assets/wedding-hero-bg.jpg";
 
 const Index = () => {
@@ -72,21 +72,6 @@ const Index = () => {
               className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg shadow-elevated">
               <Settings className="w-5 h-5 mr-2" />
               Admin Dashboard
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              onClick={async () => {
-                const { data } = await supabase.auth.getSession();
-                if (data?.session) navigate("/wedding");
-                else {
-                  setPendingRedirect("/wedding");
-                  setShowSignIn(true);
-                }
-              }}
-              className="border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-6 text-lg">
-              <Eye className="w-5 h-5 mr-2" />
-              Preview Invitation
             </Button>
           </div>
         </div>
