@@ -3758,3 +3758,52 @@ html:lang(km) .mo-hero .mo-kicker { letter-spacing: 0.02em; }
     to { transform: scale(1.07) translateX(0); }
   }
 }
+
+/* ==============================================================
+   Couple / Location / Gift entrance effects. Keyed on the section's
+   `.is-visible` (toggled both ways by revealOnScroll) so they replay.
+   ============================================================== */
+.reveal-ready :is(.couple-section, .location-section, .gift-section) :is(
+  .couple-eyebrow, .couple-person, .couple-heart, .couple-heart-mobile, .couple-message, .couple-date,
+  .loc-head, .loc-photo, .loc-mapcard, .loc-foot, .lf-frame, .lm-card,
+  .gift-card-inner, .gift-icon, .gift-open
+) {
+  opacity: 0;
+  animation: none !important;
+  transition:
+    opacity calc(0.8s * var(--anim-speed, 1)) ease,
+    transform calc(0.8s * var(--anim-speed, 1)) cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.reveal-ready .couple-groom { transform: translateX(-48px); }
+.reveal-ready .couple-bride { transform: translateX(48px); }
+.reveal-ready :is(.couple-eyebrow, .couple-message, .couple-date, .loc-head, .loc-foot) { transform: translateY(22px); }
+.reveal-ready :is(.couple-heart, .couple-heart-mobile) { transform: scale(0.3); }
+.reveal-ready :is(.loc-photo, .lf-frame:not(.lf-right)) { transform: translateX(-44px); }
+.reveal-ready :is(.loc-mapcard, .lf-frame.lf-right) { transform: translateX(44px); }
+.reveal-ready .lm-card { transform: translateY(36px) scale(0.96); }
+.reveal-ready .gift-card-inner { transform: translateY(32px) scale(0.92); }
+.reveal-ready .gift-icon { transform: scale(0.2) rotate(-25deg); }
+.reveal-ready .gift-open { transform: translateY(14px); }
+
+.reveal-ready .is-visible :is(
+  .couple-eyebrow, .couple-person, .couple-heart, .couple-heart-mobile, .couple-message, .couple-date,
+  .loc-head, .loc-photo, .loc-mapcard, .loc-foot, .lf-frame, .lm-card,
+  .gift-card-inner, .gift-icon, .gift-open
+) { opacity: 1; transform: none; }
+.reveal-ready .is-visible :is(.couple-heart, .couple-heart-mobile) { animation: heartbeat 1.6s ease-in-out 1s infinite !important; }
+
+.reveal-ready .is-visible .couple-groom { transition-delay: 0.15s; }
+.reveal-ready .is-visible .couple-bride { transition-delay: 0.3s; }
+.reveal-ready .is-visible :is(.couple-heart, .couple-heart-mobile) { transition-delay: 0.5s; }
+.reveal-ready .is-visible .couple-message { transition-delay: 0.55s; }
+.reveal-ready .is-visible .couple-date { transition-delay: 0.7s; }
+.reveal-ready .is-visible :is(.loc-photo, .lf-frame:not(.lf-right)) { transition-delay: 0.2s; }
+.reveal-ready .is-visible :is(.loc-mapcard, .lf-frame.lf-right) { transition-delay: 0.35s; }
+.reveal-ready .is-visible .loc-foot { transition-delay: 0.6s; }
+.reveal-ready .is-visible .gift-icon { transition-delay: 0.25s; }
+.reveal-ready .is-visible .gift-open { transition-delay: 0.45s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-ready :is(.couple-eyebrow, .couple-person, .couple-heart, .couple-heart-mobile, .couple-message, .couple-date, .loc-head, .loc-photo, .loc-mapcard, .loc-foot, .lf-frame, .lm-card, .gift-card-inner, .gift-icon, .gift-open) { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+.animations-off :is(.couple-eyebrow, .couple-person, .couple-heart, .couple-heart-mobile, .couple-message, .couple-date, .loc-head, .loc-photo, .loc-mapcard, .loc-foot, .lf-frame, .lm-card, .gift-card-inner, .gift-icon, .gift-open) { opacity: 1 !important; transform: none !important; transition: none !important; }
