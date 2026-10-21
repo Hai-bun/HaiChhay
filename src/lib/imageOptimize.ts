@@ -1,7 +1,7 @@
 // Phone photos are often 4-12 MB. Guests on mobile data wait on every byte, so
 // photos are downscaled and re-encoded in the browser before they are uploaded.
-const MAX_SIDE = 1800;
-const QUALITY = 0.82;
+const MAX_SIDE = 2400; // sharp on a full-bleed laptop hero, still ~10x smaller than a camera file
+const QUALITY = 0.85;
 
 export async function optimizeImage(file: File, maxSide = MAX_SIDE): Promise<File> {
   // Leave GIF/SVG (animation / vector) and non-images untouched.

@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -53,6 +54,7 @@ import {
   ScheduleItem,
 } from "@/lib/weddingStore";
 import { uploadWeddingImage, deleteWeddingImage } from "@/lib/storage";
+import { optimizeStoredPhotos } from "@/lib/optimizeExisting";
 import { ThemeSelector } from "@/components/admin/ThemeSelector";
 import { ImageCropDialog } from "@/components/admin/ImageCropDialog";
 import { FloralDecorSelector } from "@/components/admin/FloralDecorSelector";
@@ -173,6 +175,34 @@ const Admin = () => {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     toast.success("Link copied to clipboard!");
+  };
+
+  const [optimizing, setOptimizing] = useState(false);
+  const [optimizeProgress, setOptimizeProgress] = useState("");
+
+  const handleOptimizePhotos = async () => {
+    if (!data || optimizing) return;
+    setOptimizing(true);
+    try {
+      const result = await optimizeStoredPhotos(data, (done, total) =>
+        setOptimizeProgress(`${done}/${total}`),
+      );
+      if (result.replaced === 0) {
+        toast.success("Your photos are already a good size.");
+        return;
+      }
+      setData(result.data);
+      const mb = (n: number) => (n / 1048576).toFixed(1);
+      toast.success(
+        `Optimised ${result.replaced} photos (${mb(result.beforeBytes)} MB → ${mb(result.afterBytes)} MB). Press Save to apply.`,
+      );
+    } catch (e) {
+      console.error(e);
+      toast.error("Could not optimise the photos. Please try again.");
+    } finally {
+      setOptimizing(false);
+      setOptimizeProgress("");
+    }
   };
 
   // A ready-to-send message (Khmer) with the guest's own name and link.
@@ -937,6 +967,53 @@ const Admin = () => {
                         }
                       />
                     ))}
+
+                    {(() => {
+                      const heroUrl =
+                        data.sectionImages?.hero || data.backgroundImage || data.photos[0] || "";
+                      const focus = data.sectionImages?.heroFocus ?? 50;
+                      const isVideo = /\.(mp4|webm|mov)(\?|$)/i.test(heroUrl);
+                      return (
+                        <div className="space-y-3">
+                          <div>
+                            <Label className="text-base">Hero photo position on phones</Label>
+                            <p className="text-sm text-muted-foreground mt-1">
+                              A tall phone screen shows only a slice of a wide photo. Slide left or
+                              right until both of you are inside the frame. Computers still show the
+                              whole photo.
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            {heroUrl && !isVideo && (
+                              <div className="w-20 shrink-0 overflow-hidden rounded-md border border-border" style={{ aspectRatio: "9 / 19" }}>
+                                <img
+                                  src={heroUrl}
+                                  alt=""
+                                  className="h-full w-full object-cover"
+                                  style={{ objectPosition: `${focus}% 50%` }}
+                                />
+                              </div>
+                            )}
+                            <div className="flex-1 space-y-2">
+                              <Slider
+                                min={0}
+                                max={100}
+                                step={1}
+                                value={[focus]}
+                                onValueChange={([v]) =>
+                                  setData({ ...data, sectionImages: { ...data.sectionImages, heroFocus: v } })
+                                }
+                              />
+                              <div className="flex justify-between text-xs text-muted-foreground">
+                                <span>Left</span>
+                                <span>{focus}%</span>
+                                <span>Right</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
 
                     <ImageMultiPicker
                       label="Save the Date photos"
@@ -1986,6 +2063,19 @@ const Admin = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
+                <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border p-4">
+                  <div className="min-w-0 flex-1">
+                    <Label className="text-base">Optimise photos</Label>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Big camera photos make the invitation slow and slightly blurry for guests.
+                      This makes smaller, sharper copies and uses them instead. Your originals stay
+                      stored. Press Save afterwards.
+                    </p>
+                  </div>
+                  <Button type="button" variant="outline" disabled={optimizing} onClick={handleOptimizePhotos}>
+                    {optimizing ? `Optimising… ${optimizeProgress}` : "Optimise photos"}
+                  </Button>
+                </div>
                 <div className="space-y-3">
                   <div>
                     <Label>Gallery layout</Label>

@@ -17,9 +17,13 @@ function generateUniquePath(folder: string, file: File): string {
 export async function uploadWeddingImage(
   file: File,
   folder: "photos" | "khqr" | "background" | "monogram" | "fonts" | "music",
+  options: { optimize?: boolean } = {},
 ): Promise<string | null> {
   // Downscale photos (not the KHQR, which must stay pixel-exact, nor fonts).
-  if (folder === "photos" || folder === "background" || folder === "monogram") {
+  if (
+    options.optimize !== false &&
+    (folder === "photos" || folder === "background" || folder === "monogram")
+  ) {
     file = await optimizeImage(file);
   }
   const path = generateUniquePath(folder, file);
