@@ -70,8 +70,14 @@ export const HeaderNav = ({ weddingData, language }: HeaderNavProps) => {
 
   // Keep the active link visible in the horizontally scrolling mobile bar.
   useEffect(() => {
-    const btn = listRef.current?.querySelector<HTMLElement>("[data-active='true']");
-    btn?.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+    // Scroll only the bar itself (scrollIntoView can nudge the whole page sideways).
+    const list = listRef.current;
+    const btn = list?.querySelector<HTMLElement>("[data-active='true']");
+    if (!list || !btn) return;
+    list.scrollTo({
+      left: btn.offsetLeft - (list.clientWidth - btn.offsetWidth) / 2,
+      behavior: "smooth",
+    });
   }, [active]);
 
   if (!weddingData.showHeaderNav || present.length === 0) return null;

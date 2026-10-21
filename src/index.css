@@ -3807,3 +3807,6 @@ html:lang(km) .mo-hero .mo-kicker { letter-spacing: 0.02em; }
   .reveal-ready :is(.couple-eyebrow, .couple-person, .couple-heart, .couple-heart-mobile, .couple-message, .couple-date, .loc-head, .loc-photo, .loc-mapcard, .loc-foot, .lf-frame, .lm-card, .gift-card-inner, .gift-icon, .gift-open) { opacity: 1 !important; transform: none !important; transition: none !important; }
 }
 .animations-off :is(.couple-eyebrow, .couple-person, .couple-heart, .couple-heart-mobile, .couple-message, .couple-date, .loc-head, .loc-photo, .loc-mapcard, .loc-foot, .lf-frame, .lm-card, .gift-card-inner, .gift-icon, .gift-open) { opacity: 1 !important; transform: none !important; transition: none !important; }
+
+/* Slide-in children start off to the side; clip them so they never widen the page on phones. */
+:is(.couple-section, .location-section, .gift-section, .wedding-root, .mo-shell) { overflow-x: clip; }
