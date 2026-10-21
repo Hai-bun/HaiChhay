@@ -795,12 +795,15 @@ export const getGuestById = async (id: string): Promise<Guest | null> => {
     .from("guest_invitations")
     .select("*")
     .eq("id", id)
-    .single();
+    .maybeSingle();
 
+  // A real failure (network, server) throws so the page does not mistake it for a
+  // removed guest; a missing row means the guest was deleted in Admin.
   if (error) {
     console.error("Failed to fetch guest by id:", error);
-    return null;
+    throw error;
   }
+  if (!data) return null;
 
   return mapGuestRowToGuest(data);
 };

@@ -20,6 +20,7 @@ export const useGuest = (guestId?: string) =>
     queryKey: ["guest", guestId],
     queryFn: () => getGuestById(guestId as string),
     enabled: Boolean(guestId),
+    retry: 1,
     staleTime: FIVE_MINUTES,
     refetchOnWindowFocus: false,
   });

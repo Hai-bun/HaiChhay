@@ -64,6 +64,8 @@ export interface Translations {
   scanQR: string;
   
   // Footer
+  invitationUnavailableTitle: string;
+  invitationUnavailableBody: string;
   thankYouTitle: string;
   thankYou: string;
   madeWithLove: string;
@@ -158,6 +160,8 @@ const translations: Record<Language, Translations> = {
     scanQR: 'Scan the QR code to send a gift',
     
     // Footer
+    invitationUnavailableTitle: 'This invitation is no longer available',
+    invitationUnavailableBody: 'This link has been removed by the hosts. If you think this is a mistake, please contact them for a new invitation.',
     thankYouTitle: 'With Gratitude and Apologies',
     thankYou:
       'We are deeply grateful to every honoured guest, from Samdech, Excellencies and distinguished dignitaries to our dear relatives and friends, who will grace our wedding celebration with their presence. Please forgive us for not being able to deliver each invitation in person. With our highest respect.',
@@ -251,6 +255,8 @@ const translations: Record<Language, Translations> = {
     scanQR: 'ស្កេន QR ដើម្បីផ្ញើអំណោយ',
     
     // Footer
+    invitationUnavailableTitle: 'សំបុត្រអញ្ជើញនេះលែងមានទៀតហើយ',
+    invitationUnavailableBody: 'តំណនេះត្រូវបានម្ចាស់កម្មវិធីលុបចេញ។ ប្រសិនបើអ្នកគិតថាមានកំហុស សូមទាក់ទងម្ចាស់កម្មវិធីដើម្បីសុំសំបុត្រអញ្ជើញថ្មី។',
     thankYouTitle: 'សូមអរគុណ និងសូមអភ័យទោស',
     thankYou:
       'យើងខ្ញុំទាំងពីរ សូមថ្លែងអំណរគុណ យ៉ាងជ្រាលជ្រៅ ចំពោះវត្តមាន ដ៏ឧត្តុង្គឧត្តមរបស់ សម្តេច ឯកឧត្តម លោកជំទាវ លោកអ្នកឧកញ៉ា អ្នកឧកញ៉ា ឧកញ៉ា លោក លោកស្រី អ្នកនាង កញ្ញា ដែលបាន អញ្ជើញចូលរួមជាកិត្តិយស ក្នុងពិធីសិរីសួស្តីអាពាហ៍ពិពាហ៍ របស់យើងខ្ញុំ នាពេលខាងមុខនេះ។ យើងខ្ញុំសូមការខន្តីអភ័យទោស ដែលពុំបានជូនលិខិតអញ្ជើញ ដោយផ្ទាល់ ។ ដោយការវកិច្ចដ៏ខ្ពង់ខ្ពស់ពីយើងខ្ញុំ។',

@@ -32,6 +32,7 @@ import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 import { HeaderNav } from "@/components/wedding/HeaderNav";
 import { MusicToggle } from "@/components/ui/MusicToggle";
 import { InvitationLoader } from "@/components/ui/InvitationLoader";
+import { InvitationUnavailable } from "@/components/wedding/InvitationUnavailable";
 import { saveLoaderCache } from "@/lib/loaderCache";
 import { Heart, Calendar } from "lucide-react";
 import { applyTheme, getTheme, ThemeType, THEMES } from "@/lib/themeConfig";
@@ -48,7 +49,7 @@ const WeddingDetail = () => {
   const { guestId } = useParams<{ guestId: string }>();
   const [searchParams] = useSearchParams();
   const { data: weddingData } = useWeddingData();
-  const { data: guest } = useGuest(guestId);
+  const { data: guest, isLoading: guestLoading } = useGuest(guestId);
   const [language, setLanguage] = useState<Language>(getStoredLanguage());
 
   // Tell the browser the page language so Khmer text is shaped/styled correctly.
@@ -145,8 +146,13 @@ const WeddingDetail = () => {
     };
   }, [weddingData, previewTemplate]);
 
-  if (!weddingData) {
+  if (!weddingData || (guestId && guestLoading)) {
     return <InvitationLoader language={language} />;
+  }
+
+  // The guest was removed in Admin: their link no longer opens the invitation.
+  if (guestId && guest === null) {
+    return <InvitationUnavailable language={language} />;
   }
 
   const t = getTranslations(language);
