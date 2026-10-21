@@ -33,6 +33,7 @@ import { HeaderNav } from "@/components/wedding/HeaderNav";
 import { MusicToggle } from "@/components/ui/MusicToggle";
 import { InvitationLoader } from "@/components/ui/InvitationLoader";
 import { InvitationUnavailable } from "@/components/wedding/InvitationUnavailable";
+import { revealOnScroll } from "@/lib/revealOnScroll";
 import { saveLoaderCache } from "@/lib/loaderCache";
 import { Heart, Calendar } from "lucide-react";
 import { applyTheme, getTheme, ThemeType, THEMES } from "@/lib/themeConfig";
@@ -128,20 +129,9 @@ const WeddingDetail = () => {
     }
 
     root.classList.add("reveal-ready");
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            io.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -6% 0px" },
-    );
-    els.forEach((el) => io.observe(el));
+    const stop = revealOnScroll(els, "is-visible", { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
     return () => {
-      io.disconnect();
+      stop();
       root.classList.remove("reveal-ready");
     };
   }, [weddingData, previewTemplate]);

@@ -1,6 +1,7 @@
 import { useEffect, useRef, type CSSProperties } from "react";
 import { Calendar, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { revealOnScroll } from "@/lib/revealOnScroll";
 import type { Guest, WeddingData } from "@/lib/weddingStore";
 import { getTranslations, type Language } from "@/lib/i18n";
 import { formatWeddingDate, formatWeddingTime, localizeDigits } from "@/lib/weddingFormat";
@@ -231,24 +232,14 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
     window.addEventListener("load", onImgLoad);
     document.fonts?.ready.then(onImgLoad);
 
-    const io = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add("is-in");
-            io.unobserve(e.target);
-          }
-        }),
-      { threshold: 0.15 },
-    );
-    shell.querySelectorAll(".mo-reveal").forEach((n) => io.observe(n));
+    const stopReveal = revealOnScroll(Array.from(shell.querySelectorAll(".mo-reveal")), "is-in", { threshold: 0.15 });
 
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("load", onImgLoad);
       track?.querySelectorAll("img").forEach((img) => img.removeEventListener("load", onImgLoad));
-      io.disconnect();
+      stopReveal();
       if (raf) cancelAnimationFrame(raf);
       if (gallery) gallery.style.height = "";
     };

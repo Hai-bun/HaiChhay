@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { revealOnScroll } from "@/lib/revealOnScroll";
 import { Clock } from "lucide-react";
 import type { ScheduleConfig } from "@/lib/weddingStore";
 import { getTranslations, type Language, getStoredLanguage } from "@/lib/i18n";
@@ -29,20 +30,8 @@ export const ScheduleSection = ({ schedule, language }: ScheduleSectionProps) =>
     const list = listRef.current;
     if (!shown || !list || typeof IntersectionObserver === "undefined") return;
     const items = Array.from(list.querySelectorAll<HTMLElement>(".schedule-item"));
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add("is-in");
-            io.unobserve(e.target);
-          }
-        });
-      },
-      { threshold: 0.25, rootMargin: "0px 0px -8% 0px" },
-    );
     setArmed(true);
-    items.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+    return revealOnScroll(items, "is-in", { threshold: 0.25, rootMargin: "0px 0px -8% 0px" });
   }, [shown, schedule?.items, lang]);
 
   const items = (schedule?.items ?? []).filter(
