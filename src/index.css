@@ -3752,7 +3752,7 @@ html:lang(km) .mo-hero .mo-kicker { letter-spacing: 0.02em; }
 /* Aurora hero on phones: the tall screen crops a wide photo to its middle, which cut
    the groom off. Bias the crop to the left, where he stands, and zoom much less. */
 @media (max-width: 767px) and (orientation: portrait) {
-  .mo-hero-img { object-position: var(--hero-focus, 24% 50%); }
+  .mo-hero-img { object-position: var(--hero-focus, 37% 50%); }
   @keyframes mo-kenburns {
     from { transform: scale(1) translateX(0); }
     to { transform: scale(1.07) translateX(0); }
