@@ -51,6 +51,8 @@ export interface SectionImages {
   hero?: string;
   /** Photo shown (blurred) at the sides while the hero opens (default: the hero photo). */
   heroSide?: string;
+  /** Where the hero photo is centred on tall phone screens, 0 (left) to 100 (right); default 50. */
+  heroFocus?: number;
   /** Polaroid photo in the Save the Date section. */
   polaroid?: string;
   /** Photos in the Save-the-Date polaroid pile (auto-flicks through them). */
