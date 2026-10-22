@@ -34,6 +34,30 @@ const armUnlock = () => {
   events.forEach((e) => window.addEventListener(e, go, { once: true, passive: true }));
 };
 
+let resumeOnShow = false;
+let hideArmed = false;
+
+/** Stop the music when the guest leaves the page (home button, app switch, screen off) and resume on return. */
+const armHideHandling = () => {
+  if (hideArmed || typeof document === "undefined") return;
+  hideArmed = true;
+  const hide = () => {
+    if (audio && !audio.paused) {
+      resumeOnShow = true;
+      audio.pause();
+    }
+  };
+  const show = () => {
+    if (resumeOnShow && audio) {
+      resumeOnShow = false;
+      void audio.play().then(notify, armUnlock);
+    }
+  };
+  document.addEventListener("visibilitychange", () => (document.hidden ? hide() : show()));
+  window.addEventListener("pagehide", hide);
+  window.addEventListener("pageshow", show);
+};
+
 /** Sets the track (if it changed) and tries to play it. Safe to call repeatedly. */
 export const startMusic = (url: string): void => {
   const src = url?.trim();
@@ -44,6 +68,7 @@ export const startMusic = (url: string): void => {
     audio.preload = "auto";
     audio.addEventListener("play", notify);
     audio.addEventListener("pause", notify);
+    armHideHandling();
   }
   if (currentUrl !== src) {
     currentUrl = src;

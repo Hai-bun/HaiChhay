@@ -54,14 +54,25 @@ export const PolaroidStack = ({ photos, language }: PolaroidStackProps) => {
     if (n < 2) return;
     const img = new Image();
     img.src = photos[(step + DEPTH) % n];
+    // Decode now so the card does not pop in (and stall the flick) when it joins the pile.
+    img.decode?.().catch(() => undefined);
   }, [step, n, photos]);
+
+  // Decode the whole starting pile up front, so the first flicks and taps are smooth.
+  useEffect(() => {
+    photos.slice(0, DEPTH + 1).forEach((src) => {
+      const img = new Image();
+      img.src = src;
+      img.decode?.().catch(() => undefined);
+    });
+  }, [photos]);
 
   if (n === 0) return null;
 
   // Offsets -1 (leaving) .. DEPTH-1 (back of the pile). Keyed by absolute step so
   // each card keeps its DOM node and the CSS transition animates it forward.
   const cards: Array<{ key: number; offset: number; src: string }> = [];
-  for (let o = n > 1 ? -1 : 0; o < Math.min(DEPTH, n); o += 1) {
+  for (let o = n > 1 && step > 0 ? -1 : 0; o < Math.min(DEPTH, n); o += 1) {
     cards.push({ key: step + o, offset: o, src: photos[(((step + o) % n) + n) % n] });
   }
   const current = ((step % n) + n) % n;
@@ -87,7 +98,7 @@ export const PolaroidStack = ({ photos, language }: PolaroidStackProps) => {
         }}>
         {cards.map((c) => (
           <div key={c.key} className="pcard" data-o={c.offset}>
-            <img src={c.src} alt="" loading={c.offset <= 0 ? "eager" : "lazy"} decoding="async" draggable={false} />
+            <img src={c.src} alt="" loading="eager" decoding="async" draggable={false} />
             {c.offset === 0 && n > 1 && (
               <span className="pcard-count">
                 {num(current + 1)} / {num(n)}

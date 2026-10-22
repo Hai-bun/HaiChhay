@@ -3810,3 +3810,11 @@ html:lang(km) .mo-hero .mo-kicker { letter-spacing: 0.02em; }
 
 /* Slide-in children start off to the side; clip them so they never widen the page on phones. */
 :is(.couple-section, .location-section, .gift-section, .wedding-root, .mo-shell) { overflow-x: clip; }
+
+/* Save the Date: keep the tap/flick off the main thread and stop sticky-hover scaling on touch screens. */
+.pcard { backface-visibility: hidden; transform-style: flat; contain: layout; }
+.pcard[data-o="0"], .pcard[data-o="1"], .pcard[data-o="2"], .pcard[data-o="-1"] { will-change: transform, opacity; }
+@media (hover: none) {
+  .pstack:hover .pcard[data-o="0"] { transform: rotate(-3deg); }
+  .mo-polaroid:hover .mo-polaroid-photo { transform: rotate(-4deg); }
+}
