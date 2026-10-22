@@ -186,7 +186,7 @@ const translations: Record<Language, Translations> = {
     
     // Welcome Popup
     welcomeTitle: 'You are Invited',
-    openInvitation: 'Open Invitation',
+    openInvitation: 'Open the Invitation',
     dearGuest: 'Dear',
 
     // Film Reel Template
@@ -282,7 +282,7 @@ const translations: Record<Language, Translations> = {
     
     // Welcome Popup
     welcomeTitle: 'អ្នកត្រូវបានអញ្ជើញ',
-    openInvitation: 'បើកការអញ្ជើញ',
+    openInvitation: 'បើកធៀប',
     dearGuest: 'ជូនចំពោះ',
 
     // Film Reel Template

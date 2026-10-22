@@ -3818,3 +3818,19 @@ html:lang(km) .mo-hero .mo-kicker { letter-spacing: 0.02em; }
   .pstack:hover .pcard[data-o="0"] { transform: rotate(-3deg); }
   .mo-polaroid:hover .mo-polaroid-photo { transform: rotate(-4deg); }
 }
+
+/* ---------- Invite cover: "Open" button — title font, entrance pop, breathing ring, beating heart ---------- */
+.inv-open { font-family: var(--font-serif); letter-spacing: 0.02em; font-size: 1.1rem; animation: inv-open-in 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.3) 0.5s backwards, inv-open-breathe 2.6s ease-in-out 1.4s infinite; }
+html:lang(km) .inv-open { font-family: var(--font-script); font-size: 1rem; line-height: 1.5; }
+.inv-open svg { animation: heartbeat 1.6s ease-in-out infinite; }
+@keyframes inv-open-in { from { opacity: 0; transform: translateY(24px) scale(0.8); } to { opacity: 1; transform: none; } }
+@keyframes inv-open-breathe {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 hsl(var(--primary) / 0.45), 0 16px 30px -10px hsl(var(--primary) / 0.85); }
+  50% { transform: scale(1.04); box-shadow: 0 0 0 12px hsl(var(--primary) / 0), 0 20px 34px -10px hsl(var(--primary) / 0.95); }
+}
+.inv-open:hover, .inv-open:active { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .inv-open, .inv-open svg { animation: none; } }
+.animations-off .inv-open, .animations-off .inv-open svg { animation: none; }
+
+/* Welcome pill over the hero photo follows the couple-names colour set in Admin. */
+html[data-names-color] .mo-hero .mo-pill { color: var(--user-names); -webkit-text-fill-color: var(--user-names); }
