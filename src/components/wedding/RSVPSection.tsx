@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Heart, Send, Check } from "lucide-react";
-import { addRSVPResponse, sendRSVPToTelegram } from "@/lib/weddingStore";
+import { addRSVPResponse, hasGuestAnswered, sendRSVPToTelegram } from "@/lib/weddingStore";
 import { GuestWishes } from "./GuestWishes";
 import { toast } from "sonner";
 import { getTranslations, Language, getStoredLanguage } from "@/lib/i18n";
@@ -28,6 +28,18 @@ export const RSVPSection = ({
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // A guest who already answered (this visit or an earlier one) sees the thank-you, not the form.
+  useEffect(() => {
+    if (!guestId) return;
+    let alive = true;
+    hasGuestAnswered(guestId)
+      .then((answered) => alive && answered && setSubmitted(true))
+      .catch(() => undefined);
+    return () => {
+      alive = false;
+    };
+  }, [guestId]);
+
   const lang = language || getStoredLanguage();
   const t = getTranslations(lang);
 
@@ -40,8 +52,14 @@ export const RSVPSection = ({
     const name = guestName || "Guest";
     const isAttending = attending === "yes";
 
-    const success = await addRSVPResponse(guestId, name, isAttending, message);
-    if (!success) {
+    const result = await addRSVPResponse(guestId, name, isAttending, message);
+    if (result === "locked") {
+      // Already answered (e.g. from another tab): show the thank-you, send nothing again.
+      setSubmitted(true);
+      setIsSubmitting(false);
+      return;
+    }
+    if (result === "error") {
       toast.error(t.rsvpFailed || "Unable to submit RSVP.");
       setIsSubmitting(false);
       return;

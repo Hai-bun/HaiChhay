@@ -827,26 +827,29 @@ export const addRSVPResponse = async (
   guestName: string,
   attending: boolean,
   message: string,
-): Promise<boolean> => {
+): Promise<"ok" | "locked" | "error"> => {
   const status = attending ? "attending" : "not_attending";
   const token = generateGuestId();
 
   if (guestId) {
-    const { error } = await supabase
+    // The answer is locked once sent: only a still-pending invitation can be updated.
+    const { data, error } = await supabase
       .from("guest_invitations")
       .update({
         rsvp_status: status,
         blessing_message: message,
         invitation_status: "opened",
       })
-      .eq("id", guestId);
+      .eq("id", guestId)
+      .eq("rsvp_status", "pending")
+      .select("id");
 
     if (error) {
       console.error("Failed to update RSVP response:", error);
-      return false;
+      return "error";
     }
 
-    return true;
+    return data && data.length > 0 ? "ok" : "locked";
   }
 
   const { error } = await supabase.from("guest_invitations").insert({
@@ -861,10 +864,20 @@ export const addRSVPResponse = async (
 
   if (error) {
     console.error("Failed to insert RSVP response:", error);
-    return false;
+    return "error";
   }
 
-  return true;
+  return "ok";
+};
+
+/** True when this guest has already sent their RSVP (the answer is locked). */
+export const hasGuestAnswered = async (guestId: string): Promise<boolean> => {
+  const { data } = await supabase
+    .from("guest_invitations")
+    .select("rsvp_status")
+    .eq("id", guestId)
+    .maybeSingle();
+  return !!data && data.rsvp_status !== "pending";
 };
 
 export const addPhoto = async (imageUrl: string): Promise<boolean> => {

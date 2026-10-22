@@ -206,34 +206,51 @@ const Admin = () => {
   };
 
   // A ready-to-send message (Khmer) with the guest's own name and link.
-  const copyInviteMessage = async (guest: Guest) => {
+  // Formal for elders / colleagues / general guests, friendly for close friends.
+  const copyInviteMessage = async (guest: Guest, style: "formal" | "friendly" = "formal") => {
     if (!data) return;
     const groom = data.groomNameKh || data.groomName;
     const bride = data.brideNameKh || data.brideName;
     let date = "";
     if (data.weddingDate) {
       const p = getDateParts(data.weddingDate, "km");
-      date = `${toKhmerDigits(new Date(`${data.weddingDate}T00:00:00`).getDate())} ខែ ${p.month} ឆ្នាំ ${p.year}`;
+      date = `${toKhmerDigits(new Date(`${data.weddingDate}T00:00:00`).getDate())} ខែ ${p.month} ឆ្នាំ${p.year}`;
     }
     // Plain text for apps that ignore formatting, plus HTML so the guest name,
     // couple names and date stay bold when pasted into apps that keep it.
     const esc = (v: string) => v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    const lines = (bold: (v: string) => string) =>
-      [
-        `សូមគោរពអញ្ជើញ ${bold(guest.name)}`,
-        "",
-        "យើងខ្ញុំមានកិត្តិយសសូមអញ្ជើញ លោក/លោកស្រី អញ្ជើញចូលរួមជាអធិបតី",
-        `ក្នុងពិធីអាពាហ៍ពិពាហ៍របស់យើងខ្ញុំ ${bold(groom)} និង ${bold(bride)}`,
-        ...(date ? [`នៅថ្ងៃទី ${bold(date)}`] : []),
-        "",
-        "សូមចុចតំណខាងក្រោមដើម្បីមើលសំបុត្រអញ្ជើញ ទីតាំង និងកម្មវិធីលម្អិត៖",
-        guest.inviteUrl,
-        "",
-        "សូមអរគុណ និងសូមរង់ចាំទទួលភ្ញៀវកិត្តិយស 🙏",
-      ];
+    // Friendly voice is the groom speaking ("ខ្ញុំ និង …"), so the bride appears by her first name.
+    const brideShort = bride.trim().split(/s+/).pop() || bride;
+    const friendly = (bold: (v: string) => string) => [
+      `សួស្តី ${bold(guest.name)} ❤️`,
+      "",
+      "ថ្ងៃពិសេសរបស់ពួកយើងបានមកដល់ហើយ! 💍",
+      `ខ្ញុំ និង ${brideShort} សូមអញ្ជើញអ្នកមកចូលរួមអបអរសាទរក្នុងពិធីអាពាហ៍ពិពាហ៍របស់ពួកយើង${date ? ` នៅថ្ងៃទី ${bold(date)}` : ""}។`,
+      "",
+      "មកចូលរួមសប្បាយរីករាយ និងចែករំលែកអនុស្សាវរីយ៍ដ៏មានន័យជាមួយពួកយើងណា! 🥂",
+      "",
+      "📩 សូមចុចតំណភ្ជាប់ខាងក្រោម ដើម្បីមើលសំបុត្រអញ្ជើញ ទីតាំង និងកម្មវិធីលម្អិត៖",
+      `🔗 ${guest.inviteUrl}`,
+      "",
+      "រង់ចាំជួបអ្នកក្នុងថ្ងៃពិសេសរបស់ពួកយើងណា! ❤️🙏",
+    ];
+    const formal = (bold: (v: string) => string) => [
+      `សូមគោរពអញ្ជើញ ${bold(guest.name)} 💐`,
+      "",
+      `យើងខ្ញុំមានកិត្តិយសសូមគោរពអញ្ជើញ ${bold(guest.name)} ចូលរួមជាកិត្តិយសក្នុងពិធីអាពាហ៍ពិពាហ៍របស់យើងខ្ញុំ ${bold(`${groom} និង ${bride}`)}${date ? ` ដែលនឹងប្រព្រឹត្តទៅនៅថ្ងៃទី ${bold(date)}` : ""}។`,
+      "",
+      "សូមចុចតំណភ្ជាប់ខាងក្រោម ដើម្បីទស្សនាសំបុត្រអញ្ជើញ ពិនិត្យទីតាំង និងមើលកម្មវិធីលម្អិត៖",
+      "",
+      `🔗 ${guest.inviteUrl}`,
+      "",
+      "យើងខ្ញុំសង្ឃឹមយ៉ាងមុតមាំថា នឹងបានទទួលវត្តមានដ៏មានកិត្តិយសរបស់អ្នក ក្នុងឱកាសដ៏ពិសេសនេះ។",
+      "",
+      "សូមអរគុណ និងសូមគោរពអញ្ជើញដោយក្តីសោមនស្សរីករាយ 🙏❤️",
+    ];
+    const lines = style === "friendly" ? friendly : formal;
     const text = lines((v) => v).join("\n");
     const html = lines((v) => `<b>${esc(v)}</b>`)
-      .map((l) => (l.startsWith("http") ? `<a href="${esc(l)}">${esc(l)}</a>` : l))
+      .map((l) => (l.startsWith("🔗 http") ? `🔗 <a href="${esc(l.slice(3))}">${esc(l.slice(3))}</a>` : l))
       .join("<br>");
     try {
       await navigator.clipboard.write([
@@ -245,7 +262,7 @@ const Admin = () => {
     } catch {
       await navigator.clipboard.writeText(text);
     }
-    toast.success("Invitation message copied!");
+    toast.success(style === "friendly" ? "Friendly message copied!" : "Formal message copied!");
   };
 
   const addScheduleItem = () => {
@@ -735,7 +752,7 @@ const Admin = () => {
                     data.guests.map((guest: Guest) => (
                       <div
                         key={guest.id}
-                        className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+                        className="flex flex-col gap-3 p-4 bg-muted/50 rounded-lg sm:flex-row sm:items-center sm:justify-between">
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-foreground truncate">
                             {guest.name}
@@ -744,7 +761,7 @@ const Admin = () => {
                             {guest.inviteUrl}
                           </p>
                         </div>
-                        <div className="flex items-center gap-2 ml-4">
+                        <div className="flex flex-wrap items-center gap-2 sm:ml-4 sm:flex-nowrap sm:shrink-0">
                           <Button
                             variant="outline"
                             size="sm"
@@ -755,9 +772,18 @@ const Admin = () => {
                           <Button
                             variant="outline"
                             size="sm"
-                            title="Copy invitation message"
-                            onClick={() => copyInviteMessage(guest)}>
-                            <Send className="w-4 h-4" />
+                            title="Copy formal invitation message (elders, colleagues, general guests)"
+                            onClick={() => copyInviteMessage(guest, "formal")}>
+                            <Send className="w-4 h-4 mr-1" />
+                            <span className="text-xs">Formal</span>
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            title="Copy friendly invitation message (close friends)"
+                            onClick={() => copyInviteMessage(guest, "friendly")}>
+                            <Send className="w-4 h-4 mr-1" />
+                            <span className="text-xs">Friend</span>
                           </Button>
                           <Button
                             variant="outline"
