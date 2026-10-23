@@ -266,7 +266,7 @@ const translations: Record<Language, Translations> = {
 
     // Save the date
     markYourCalendar: 'សូមកត់ត្រាទុកថ្ងៃ',
-    saveTheDate: 'កក់ទុកថ្ងៃពិសេស',
+    saveTheDate: 'កត់ចំណាំថ្ងៃនេះទុក',
     saveTheDateText: 'យើងរង់ចាំអបអរសាទរជាមួយលោកអ្នក។',
 
     // Header navigation
