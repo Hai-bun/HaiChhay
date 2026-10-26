@@ -204,6 +204,8 @@ export interface ScheduleItem {
   description: string;
   titleKh?: string;
   descriptionKh?: string;
+  /** Key from SCHEDULE_ICONS; empty = guess from the title. */
+  icon?: string;
 }
 
 export interface ScheduleConfig {

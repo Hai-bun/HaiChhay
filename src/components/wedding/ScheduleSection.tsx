@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { revealOnScroll } from "@/lib/revealOnScroll";
 import { Clock } from "lucide-react";
+import { resolveScheduleIcon } from "@/lib/scheduleIcons";
 import type { ScheduleConfig } from "@/lib/weddingStore";
 import { getTranslations, type Language, getStoredLanguage } from "@/lib/i18n";
 import { formatWeddingTime, localizeDigits } from "@/lib/weddingFormat";
@@ -63,11 +64,14 @@ export const ScheduleSection = ({ schedule, language }: ScheduleSectionProps) =>
               km && item.descriptionKh?.trim()
                 ? item.descriptionKh
                 : item.description;
+            const EventIcon = resolveScheduleIcon(item.icon, `${item.title ?? ""} ${item.titleKh ?? ""}`);
             return (
               <li key={item.id || index} className="schedule-item flex gap-5">
                 {/* Rail: dot + connecting line */}
                 <div className="flex flex-col items-center">
-                  <span className="schedule-dot mt-1.5 w-4 h-4 rounded-full bg-primary ring-4 ring-background shrink-0" />
+                  <span className="schedule-dot w-9 h-9 rounded-full bg-primary text-primary-foreground ring-4 ring-background shrink-0 flex items-center justify-center">
+                    <EventIcon className="w-4 h-4" aria-hidden="true" />
+                  </span>
                   {index < items.length - 1 && (
                     <span className="schedule-line w-px flex-1 bg-primary/25 my-1" />
                   )}

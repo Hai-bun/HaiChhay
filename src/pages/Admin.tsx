@@ -40,6 +40,7 @@ import {
   ScrollText,
 } from "lucide-react";
 import { toast } from "sonner";
+import { SCHEDULE_ICONS } from "@/lib/scheduleIcons";
 import { getDateParts, toKhmerDigits } from "@/lib/weddingFormat";
 import {
   getWeddingData,
@@ -1850,6 +1851,22 @@ const Admin = () => {
                                 onClick={() => removeScheduleItem(index)}>
                                 <Trash2 className="w-4 h-4" />
                               </Button>
+                            </div>
+                            <div className="space-y-1">
+                              <Label className="text-xs">Icon</Label>
+                              <select
+                                value={item.icon ?? ""}
+                                onChange={(e) =>
+                                  updateScheduleItem(index, "icon", e.target.value)
+                                }
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                <option value="">Auto (match title)</option>
+                                {Object.entries(SCHEDULE_ICONS).map(([key, { label }]) => (
+                                  <option key={key} value={key}>
+                                    {label}
+                                  </option>
+                                ))}
+                              </select>
                             </div>
                             <div className="space-y-1">
                               <Label className="text-xs">Description</Label>
