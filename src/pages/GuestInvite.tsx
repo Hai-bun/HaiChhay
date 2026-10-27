@@ -151,8 +151,6 @@ const GuestInvite = () => {
               <span className="inv-leaf inv-leaf-bl" aria-hidden="true" />
               <span className="inv-leaf inv-leaf-br" aria-hidden="true" />
 
-              <p className="inv-kicker">{t.welcomeTitle}</p>
-
               {guest && (
                 <h1 className="inv-guest">
                   <span className="inv-guest-label">{t.dearGuest}</span>
