@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/invite/:path*",
+      "destination": "/api/og"
+    },
+    {
       "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
