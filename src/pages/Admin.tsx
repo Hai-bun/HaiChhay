@@ -74,9 +74,22 @@ const Admin = () => {
   const [data, setData] = useState<WeddingData | null>(null);
   const [newGuestName, setNewGuestName] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  // Guest managers (see the guest_managers migration) only get the Guests tab.
+  const [guestOnly, setGuestOnly] = useState(false);
 
   useEffect(() => {
     const loadWeddingData = async () => {
+      const { data: session } = await supabase.auth.getSession();
+      const uid = session?.session?.user?.id;
+      if (uid) {
+        // Table is newer than the generated types, hence the cast.
+        const { data: manager } = await supabase
+          .from("guest_managers" as never)
+          .select("user_id")
+          .eq("user_id", uid)
+          .maybeSingle();
+        setGuestOnly(Boolean(manager));
+      }
       const weddingData = await getWeddingData();
       const tg = await getTelegramConfig();
       if (tg) weddingData.telegramConfig = tg;
@@ -610,17 +623,19 @@ const Admin = () => {
               <ExternalLink className="w-4 h-4 mr-2" />
               Preview
             </Button>
-            <Button
-              onClick={handleSave}
-              disabled={isSaving}
-              className="bg-primary hover:bg-primary/90">
-              {isSaving ? (
-                <Check className="w-4 h-4 mr-2" />
-              ) : (
-                <Save className="w-4 h-4 mr-2" />
-              )}
-              {isSaving ? "Saved!" : "Save"}
-            </Button>
+            {!guestOnly && (
+              <Button
+                onClick={handleSave}
+                disabled={isSaving}
+                className="bg-primary hover:bg-primary/90">
+                {isSaving ? (
+                  <Check className="w-4 h-4 mr-2" />
+                ) : (
+                  <Save className="w-4 h-4 mr-2" />
+                )}
+                {isSaving ? "Saved!" : "Save"}
+              </Button>
+            )}
             <Button
               variant="outline"
               onClick={async () => {
@@ -637,7 +652,11 @@ const Admin = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         <Tabs defaultValue="guests" className="space-y-6">
-          <TabsList className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-12 gap-2 h-auto bg-transparent">
+          {/* Guest managers see only the first (Guests) tab; the other tabs never mount. */}
+          <TabsList
+            className={`grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-12 gap-2 h-auto bg-transparent ${
+              guestOnly ? "[&>button:not(:first-child)]:hidden" : ""
+            }`}>
             <TabsTrigger
               value="guests"
               className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
