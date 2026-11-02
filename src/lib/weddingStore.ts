@@ -606,6 +606,8 @@ const ensureWeddingProfile = async () => {
 
   if (error && error.code !== "PGRST116") {
     console.error("Failed to load wedding profile:", error);
+    // Throw so react-query retries instead of caching empty defaults as a success.
+    throw error;
   }
 
   if (data) {
@@ -649,10 +651,12 @@ const getWeddingRelationalData = async () => {
 
   if (guestRes.error) {
     console.error("Failed to load guest invitations:", guestRes.error);
+    throw guestRes.error;
   }
 
   if (photoRes.error) {
     console.error("Failed to load photo gallery:", photoRes.error);
+    throw photoRes.error;
   }
 
   if (giftRes.error && giftRes.error.code !== "PGRST116") {

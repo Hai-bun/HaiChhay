@@ -38,7 +38,10 @@ import {
   Clock,
   BookHeart,
   ScrollText,
+  LogOut,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { SCHEDULE_ICONS } from "@/lib/scheduleIcons";
 import { getDateParts, toKhmerDigits } from "@/lib/weddingFormat";
@@ -67,6 +70,7 @@ import { TemplateSelector } from "@/components/admin/TemplateSelector";
 import { ThemeType, applyTheme } from "@/lib/themeConfig";
 
 const Admin = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState<WeddingData | null>(null);
   const [newGuestName, setNewGuestName] = useState("");
   const [isSaving, setIsSaving] = useState(false);
@@ -616,6 +620,15 @@ const Admin = () => {
                 <Save className="w-4 h-4 mr-2" />
               )}
               {isSaving ? "Saved!" : "Save"}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={async () => {
+                await supabase.auth.signOut();
+                navigate("/");
+              }}>
+              <LogOut className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Sign out</span>
             </Button>
           </div>
         </div>
