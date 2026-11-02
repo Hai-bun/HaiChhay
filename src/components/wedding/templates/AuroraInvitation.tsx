@@ -1,4 +1,4 @@
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { Calendar, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { revealOnScroll } from "@/lib/revealOnScroll";
@@ -34,7 +34,9 @@ const splitUnits = (word: string): string[] => {
 };
 
 // Words stay unbroken (so names wrap only at spaces); letters blur/rise in.
-const SplitName = ({ text, start, on }: { text: string; start: number; on: boolean }) => {
+// `swap` = the page intro already played (language switch): letters fade in together
+// at once instead of waiting for the intro's long per-letter delay.
+const SplitName = ({ text, start, on, swap }: { text: string; start: number; on: boolean; swap?: boolean }) => {
   let n = start;
   return (
     <span className="mo-split" aria-label={text}>
@@ -43,7 +45,7 @@ const SplitName = ({ text, start, on }: { text: string; start: number; on: boole
           {splitUnits(word).map((ch, i) => (
             <span
               key={i}
-              className={cn("mo-char", on && "mo-char-in")}
+              className={cn("mo-char", on && "mo-char-in", on && swap && "mo-char-swap")}
               style={{ "--i": n++ } as CSSProperties}>
               {ch}
             </span>
@@ -107,7 +109,16 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
   // Keep each full name on a single line: shrink the heading just enough that
   // the widest name fits the available width (re-run on resize / font load).
   const nameRef = useRef<HTMLHeadingElement>(null);
+
+  // Once the opening animation has run, name changes (language switch) skip its delay.
+  const [introDone, setIntroDone] = useState(false);
   useEffect(() => {
+    const id = window.setTimeout(() => setIntroDone(true), 5000);
+    return () => window.clearTimeout(id);
+  }, []);
+
+  // Layout effect: re-fit before paint so the new name never flashes at the wrong size.
+  useLayoutEffect(() => {
     const h1 = nameRef.current;
     if (!h1) return;
     const fit = () => {
@@ -281,9 +292,9 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
           <p className={cn("mo-kicker", fade("mo-kicker-fx"))}>{t.weInviteYou}</p>
 
           <h1 ref={nameRef} className="mo-name">
-            <SplitName text={groom} start={4} on={animOn} />
+            <SplitName key={`g-${language}`} text={groom} start={4} on={animOn} swap={introDone} />
             <span className={cn("mo-amp", fade("animate-fade-in-up delay-1000"))}>{amp}</span>
-            <SplitName text={bride} start={groom.length + 10} on={animOn} />
+            <SplitName key={`b-${language}`} text={bride} start={groom.length + 10} on={animOn} swap={introDone} />
           </h1>
         </div>
 
@@ -308,9 +319,7 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
           {polaroidPhotos.length > 0 && <PolaroidStack photos={polaroidPhotos} language={language} />}
 
           <div className="mo-save-text mo-reveal">
-            <p className="mo-save-eyebrow">{t.markYourCalendar}</p>
             <h2 className="mo-save-title">{t.saveTheDate}</h2>
-            <p className="mo-save-sub">{t.saveTheDateText}</p>
 
             <div className="mo-date">
               <Calendar className="w-4 h-4" />
