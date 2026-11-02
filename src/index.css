@@ -2551,8 +2551,8 @@
 .mo-char { display: inline-block; }
 .mo-char-in {
   opacity: 0;
-  animation: mo-char 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-  animation-delay: calc(2.3s + var(--i, 0) * 0.05s);
+  animation: mo-char 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  animation-delay: calc(0.8s + var(--i, 0) * 0.03s);
 }
 /* Language switch after the intro: all letters fade in together, no wait. */
 .mo-char-in.mo-char-swap { animation-name: mo-char-swap; animation-duration: 0.45s; animation-delay: 0s; }
@@ -2769,7 +2769,7 @@
    cream page), replacing the earlier cream curtain panels. */
 .mo-hero { background: #2a0f22; }
 .mo-curtain { display: none !important; }
-.mo-hero-media-open { animation: mo-photo-open 2.8s cubic-bezier(0.65, 0, 0.25, 1) both; }
+.mo-hero-media-open { animation: mo-photo-open 1.6s cubic-bezier(0.65, 0, 0.25, 1) both; }
 @keyframes mo-photo-open {
   from { clip-path: inset(0 50% 0 50%); }
   to { clip-path: inset(0 0 0 0); }
@@ -3702,9 +3702,9 @@ html[data-border-color] .lm-card { border-color: var(--user-border); }
 .mo-pill-fx {
   position: relative; overflow: hidden; opacity: 0;
   animation:
-    mo-pill-in 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) 1.7s forwards,
-    mo-pill-float 5s ease-in-out 2.9s infinite,
-    mo-pill-glow 3.6s ease-in-out 2.9s infinite;
+    mo-pill-in 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.9s forwards,
+    mo-pill-float 5s ease-in-out 2s infinite,
+    mo-pill-glow 3.6s ease-in-out 2s infinite;
 }
 @keyframes mo-pill-in {
   from { opacity: 0; transform: translateY(28px) scale(0.84); filter: blur(10px); }
@@ -3721,13 +3721,13 @@ html[data-border-color] .lm-card { border-color: var(--user-border); }
 .mo-pill-fx::after {
   content: ""; position: absolute; top: 0; bottom: 0; width: 38%; left: -60%; pointer-events: none;
   background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.45), transparent); transform: skewX(-20deg);
-  animation: mo-pill-sweep 4.6s ease-in-out 3.2s infinite;
+  animation: mo-pill-sweep 4.6s ease-in-out 2.3s infinite;
 }
 @keyframes mo-pill-sweep { 0%, 55% { left: -60%; } 100% { left: 150%; } }
-.mo-kicker-fx { opacity: 0; animation: mo-kicker-in 1s ease-out 2.1s forwards; }
-@keyframes mo-kicker-in { from { opacity: 0; transform: translateY(14px); letter-spacing: 0.7em; } to { opacity: 0.85; transform: none; } }
-html:lang(km) .mo-kicker-fx { animation-name: mo-kicker-in-km; }
-@keyframes mo-kicker-in-km { from { opacity: 0; transform: translateY(14px); } to { opacity: 0.85; transform: none; } }
+/* Fade + rise only. (Animating letter-spacing made the line wrap onto 2 rows, then jump back to 1.) */
+.mo-kicker-fx { opacity: 0; animation: mo-kicker-in 0.8s ease-out 0.5s forwards; }
+@keyframes mo-kicker-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 0.85; transform: none; } }
+html:lang(km) .mo-kicker-fx { animation-name: mo-kicker-in; }
 @media (prefers-reduced-motion: reduce) {
   .mo-pill-fx, .mo-kicker-fx { animation: none; opacity: 1; }
   .mo-pill-fx::after { display: none; }

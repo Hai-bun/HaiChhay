@@ -113,7 +113,7 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
   // Once the opening animation has run, name changes (language switch) skip its delay.
   const [introDone, setIntroDone] = useState(false);
   useEffect(() => {
-    const id = window.setTimeout(() => setIntroDone(true), 5000);
+    const id = window.setTimeout(() => setIntroDone(true), 3000);
     return () => window.clearTimeout(id);
   }, []);
 
