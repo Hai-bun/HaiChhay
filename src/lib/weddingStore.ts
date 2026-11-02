@@ -230,6 +230,8 @@ export interface Guest {
   name: string;
   inviteUrl: string;
   createdAt: string;
+  /** Auth user id of whoever added this guest (empty for older guests). */
+  createdBy?: string;
 }
 
 export interface RSVPResponse {
@@ -367,6 +369,8 @@ const mapGuestRowToGuest = (
   name: row.guest_name,
   inviteUrl: getInviteUrl(row.id),
   createdAt: row.created_at ?? new Date().toISOString(),
+  // created_by is newer than the generated types.
+  createdBy: (row as { created_by?: string | null }).created_by ?? undefined,
 });
 
 const mapGuestRowToResponse = (
@@ -778,6 +782,7 @@ export const addGuest = async (name: string): Promise<Guest | null> => {
   const id = generateGuestId();
   const guest = {
     id,
+    created_by: await getCurrentUserId(),
     wedding_id: DEFAULT_WEDDING_ID,
     guest_name: name,
     invitation_token: generateGuestId(),

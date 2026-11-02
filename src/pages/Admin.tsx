@@ -76,11 +76,13 @@ const Admin = () => {
   const [isSaving, setIsSaving] = useState(false);
   // Guest managers (see the guest_managers migration) only get the Guests tab.
   const [guestOnly, setGuestOnly] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
     const loadWeddingData = async () => {
       const { data: session } = await supabase.auth.getSession();
       const uid = session?.session?.user?.id;
+      setUserId(uid ?? null);
       if (uid) {
         // Table is newer than the generated types, hence the cast.
         const { data: manager } = await supabase
@@ -597,6 +599,11 @@ const Admin = () => {
     );
   }
 
+  // A guest manager only sees the guests they added themselves.
+  const visibleGuests = guestOnly
+    ? data.guests.filter((g) => g.createdBy === userId)
+    : data.guests;
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -777,12 +784,12 @@ const Admin = () => {
 
                 {/* Guest List */}
                 <div className="space-y-3">
-                  {data.guests.length === 0 ? (
+                  {visibleGuests.length === 0 ? (
                     <p className="text-center text-muted-foreground py-8">
                       No guests added yet. Add your first guest above.
                     </p>
                   ) : (
-                    data.guests.map((guest: Guest) => (
+                    visibleGuests.map((guest: Guest) => (
                       <div
                         key={guest.id}
                         className="flex flex-col gap-3 p-4 bg-muted/50 rounded-lg sm:flex-row sm:items-center sm:justify-between">
