@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useWeddingData, useGuest } from "@/hooks/use-wedding-data";
 import { FloatingPetals } from "@/components/ui/FloatingPetals";
+import { FallingFlowers } from "@/components/ui/FallingFlowers";
 import { SparkleField } from "@/components/ui/SparkleField";
 import { OrnamentDivider } from "@/components/ui/OrnamentDivider";
 import { CountdownTimer } from "@/components/wedding/CountdownTimer";
@@ -214,6 +215,8 @@ const WeddingDetail = () => {
         <MusicToggle url={weddingData.musicUrl} language={language} autoStart />
         {showSparkles && <SparkleField />}
         {showCuteStickers && <CuteStickers />}
+        {/* Aurora: falling flowers, switched by the same "Floating petals" toggle in Admin */}
+        {animOn && anim.floatingPetals && template.id === "aurora" && <FallingFlowers />}
         <SelfContainedTemplate
           weddingData={weddingData}
           guest={guest ?? null}

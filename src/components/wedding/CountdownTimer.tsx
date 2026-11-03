@@ -41,10 +41,11 @@ export const CountdownTimer = ({ targetDate, targetTime, language }: CountdownTi
     return () => clearInterval(timer);
   }, [targetDate, targetTime]);
 
-  const TimeBlock = ({ value, label }: { value: number; label: string }) => (
+  // `tick`: this digit animates on every change (seconds only; the block remounts each second).
+  const TimeBlock = ({ value, label, tick }: { value: number; label: string; tick?: boolean }) => (
     <div className="flex flex-col items-center">
       <div className="countdown-box w-16 h-16 sm:w-20 sm:h-20 bg-card rounded-lg shadow-card flex items-center justify-center border border-border">
-        <span className="text-2xl sm:text-3xl font-serif font-semibold text-foreground">
+        <span className={`text-2xl sm:text-3xl font-serif font-semibold text-foreground${tick ? " countdown-tick" : ""}`}>
           {localizeDigits(value.toString().padStart(2, '0'), lang)}
         </span>
       </div>
@@ -59,7 +60,7 @@ export const CountdownTimer = ({ targetDate, targetTime, language }: CountdownTi
       <TimeBlock value={timeLeft.days} label={t.days} />
       <TimeBlock value={timeLeft.hours} label={t.hours} />
       <TimeBlock value={timeLeft.minutes} label={t.minutes} />
-      <TimeBlock value={timeLeft.seconds} label={t.seconds} />
+      <TimeBlock value={timeLeft.seconds} label={t.seconds} tick />
     </div>
   );
 };

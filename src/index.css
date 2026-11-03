@@ -3892,3 +3892,82 @@ html:lang(km) .inv-open { font-family: var(--font-script); font-size: 1rem; line
 
 /* Welcome pill over the hero photo follows the couple-names colour set in Admin. */
 html[data-names-color] .mo-hero .mo-pill { color: var(--user-names); -webkit-text-fill-color: var(--user-names); }
+
+/* ==============================================================
+   Detail page: motion layer (animation only, no colour/background changes).
+   Everything is gated by `.reveal-ready` (animations on in Admin, no "reduce motion")
+   and keyed on `.is-visible` so it replays each time a section scrolls into view.
+   ============================================================== */
+/* Section header: icon pops in then floats, title and subtitle rise */
+.reveal-ready .scroll-reveal :is(.mb-8, .mb-10).text-center > svg { opacity: 0; transform: scale(0.2) rotate(-40deg); }
+.reveal-ready .scroll-reveal :is(.mb-8, .mb-10).text-center > :is(h2, p) { opacity: 0; transform: translateY(22px); }
+.reveal-ready .scroll-reveal.is-visible :is(.mb-8, .mb-10).text-center > svg {
+  animation: dp-icon-pop 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.5) 0.1s both, dp-float 3.4s ease-in-out 1.2s infinite;
+}
+.reveal-ready .scroll-reveal.is-visible :is(.mb-8, .mb-10).text-center > h2 { animation: dp-rise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s both; }
+.reveal-ready .scroll-reveal.is-visible :is(.mb-8, .mb-10).text-center > p { animation: dp-rise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.45s both; }
+
+/* RSVP form: card, message box and button arrive one after another; button gets a light sweep */
+.reveal-ready #rsvp form > * { opacity: 0; transform: translateY(26px); }
+.reveal-ready #rsvp.is-visible form > * { animation: dp-rise 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.reveal-ready #rsvp.is-visible form > :nth-child(1) { animation-delay: 0.55s; }
+.reveal-ready #rsvp.is-visible form > :nth-child(2) { animation-delay: 0.7s; }
+.reveal-ready #rsvp.is-visible form > :nth-child(3) { animation-delay: 0.85s; }
+.reveal-ready #rsvp form button[type="submit"] { position: relative; overflow: hidden; }
+.reveal-ready #rsvp form button[type="submit"]::after {
+  content: ""; position: absolute; top: 0; bottom: 0; width: 40%; left: -60%; pointer-events: none;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.4), transparent); transform: skewX(-20deg);
+  animation: dp-sheen 3.8s ease-in-out 1.6s infinite;
+}
+
+/* Ornament stars twinkle */
+.reveal-ready .is-visible .ornament-divider svg { animation: dp-twinkle 2.8s ease-in-out infinite; transform-origin: 50% 50%; }
+
+/* Timeline dots send out a soft ring, one after another */
+.reveal-ready .schedule-dot { position: relative; }
+.reveal-ready .schedule-item.is-in .schedule-dot::after {
+  content: ""; position: absolute; inset: 0; border-radius: 9999px; pointer-events: none;
+  border: 2px solid hsl(var(--primary)); opacity: 0; animation: dp-ring 2.6s ease-out 0.9s infinite;
+}
+.reveal-ready .schedule-item:nth-child(2n) .schedule-dot::after { animation-delay: 1.5s; }
+.reveal-ready .schedule-item:nth-child(3n) .schedule-dot::after { animation-delay: 2.1s; }
+
+/* Closing heart beats; the seconds digit ticks in */
+.reveal-ready footer svg.lucide-heart { animation: dp-beat 1.8s ease-in-out infinite; }
+.reveal-ready .countdown-tick { display: inline-block; animation: dp-tick 0.45s cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+@keyframes dp-icon-pop {
+  from { opacity: 0; transform: scale(0.2) rotate(-40deg); }
+  60% { opacity: 1; transform: scale(1.18) rotate(8deg); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes dp-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes dp-rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+@keyframes dp-sheen { 0%, 55% { left: -60%; } 100% { left: 150%; } }
+@keyframes dp-twinkle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.85; }
+  50% { transform: scale(1.3) rotate(45deg); opacity: 1; }
+}
+@keyframes dp-ring { 0% { transform: scale(1); opacity: 0.7; } 70%, 100% { transform: scale(1.9); opacity: 0; } }
+@keyframes dp-beat { 0%, 70%, 100% { transform: scale(1); } 14% { transform: scale(1.25); } 28% { transform: scale(1); } 42% { transform: scale(1.18); } }
+@keyframes dp-tick { from { opacity: 0; transform: translateY(-40%) scale(0.9); } to { opacity: 1; transform: none; } }
+
+/* ---------- Falling flowers (Aurora detail page) ----------
+   Fixed layer above the page, below the nav/controls. Each flower falls on a long linear path;
+   its inner wrapper sways and turns, so the two motions combine into a natural drift. */
+.falling-flowers { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 30; }
+.ff {
+  position: absolute; top: -40px; width: var(--size); height: var(--size);
+  animation: ff-fall var(--fall) linear var(--delay) infinite; will-change: transform;
+}
+.ff-sway { display: block; width: 100%; height: 100%; animation: ff-sway var(--sway-dur) ease-in-out infinite alternate; }
+.ff svg { display: block; filter: drop-shadow(0 2px 3px rgba(120, 40, 60, 0.18)); }
+@keyframes ff-fall {
+  from { transform: translate3d(0, -6vh, 0); }
+  to { transform: translate3d(var(--drift), 112vh, 0); }
+}
+@keyframes ff-sway {
+  from { transform: translateX(calc(var(--sway) * -1)) rotate(calc(var(--spin) * -1)); }
+  to { transform: translateX(var(--sway)) rotate(var(--spin)); }
+}
+@media (prefers-reduced-motion: reduce) { .falling-flowers { display: none; } }
