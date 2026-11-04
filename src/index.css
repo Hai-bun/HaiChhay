@@ -4055,7 +4055,8 @@ html[data-names-color] .mo-hero .mo-pill { color: var(--user-names); -webkit-tex
 /* Web: the frame is a tall portrait card (4:5), centred, instead of the wide 16:10 frame.
    The blurred glow of the photos still spreads out behind it on both sides. */
 @media (min-width: 768px) {
-  .sp-border { max-width: 30rem; margin: 0 auto; border-radius: 31px; }
+  /* Up to 38rem wide, but never taller than the screen allows (height = 1.25 x width), and never below 30rem. */
+  .sp-border { max-width: min(38rem, max(30rem, calc((100vh - 8rem) * 0.8))); margin: 0 auto; border-radius: 31px; }
   .sp-stage, html[data-border-color] .sp-stage { aspect-ratio: 4 / 5; border-radius: 28px; }
 }
 @media (prefers-reduced-motion: reduce) { .sp-slide.is-active img { animation: none; } }
