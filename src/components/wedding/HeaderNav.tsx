@@ -84,6 +84,8 @@ export const HeaderNav = ({ weddingData, language }: HeaderNavProps) => {
 
   const go = (id: string) => {
     if (id === "top") {
+      // Already at the top: nothing scrolls, so ask the hero to replay its opening itself.
+      if (window.scrollY < 40) window.dispatchEvent(new Event("hero-replay"));
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }

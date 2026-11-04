@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { Calendar, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { revealOnScroll } from "@/lib/revealOnScroll";
@@ -112,10 +112,52 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
 
   // Once the opening animation has run, name changes (language switch) skip its delay.
   const [introDone, setIntroDone] = useState(false);
+  // Bumped each time the Home hero replays, so the name letters remount and play the full intro again.
+  const [heroRun, setHeroRun] = useState(0);
   useEffect(() => {
     const id = window.setTimeout(() => setIntroDone(true), 3000);
     return () => window.clearTimeout(id);
-  }, []);
+  }, [heroRun]);
+
+  // Replay the Home opening whenever the guest comes back to it (like the other sections),
+  // or presses Home in the menu while already at the top.
+  const heroRef = useRef<HTMLElement>(null);
+  const replayHero = useCallback(() => {
+    const hero = heroRef.current;
+    if (!hero || !animOn) return;
+    setIntroDone(false);
+    setHeroRun((n) => n + 1);
+    // Restart every other CSS animation inside the hero (photo opening, kicker, leaves ...).
+    hero.getAnimations({ subtree: true }).forEach((a) => {
+      const target = (a.effect as KeyframeEffect | null)?.target as Element | null;
+      if (typeof CSSAnimation !== "undefined" && !(a instanceof CSSAnimation)) return;
+      if (target?.classList?.contains("mo-char")) return;
+      a.cancel();
+      a.play();
+    });
+  }, [animOn]);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    if (!hero || !animOn || typeof IntersectionObserver === "undefined") return;
+    let away = false;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.intersectionRatio < 0.08) away = true;
+        else if (away && e.intersectionRatio >= 0.6) {
+          away = false;
+          replayHero();
+        }
+      },
+      { threshold: [0, 0.08, 0.6] },
+    );
+    io.observe(hero);
+    window.addEventListener("hero-replay", replayHero);
+    return () => {
+      io.disconnect();
+      window.removeEventListener("hero-replay", replayHero);
+    };
+  }, [animOn, replayHero]);
 
   // Layout effect: re-fit before paint so the new name never flashes at the wrong size.
   useLayoutEffect(() => {
@@ -263,6 +305,7 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
 
       {/* ---------- Hero: full-bleed photo, Ken Burns, curtain reveal ---------- */}
       <section
+        ref={heroRef}
         className="mo-hero"
         style={
           {
@@ -283,6 +326,14 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
           <div className="mo-hero-shade" />
         </div>
 
+        {/* Eucalyptus leaves drift in at the bottom corners and keep swaying (same leaves as the invite cover) */}
+        {animOn && (
+          <>
+            <span className="inv-leaf inv-leaf-bl mo-hero-leaf" aria-hidden="true" />
+            <span className="inv-leaf inv-leaf-br mo-hero-leaf" aria-hidden="true" />
+          </>
+        )}
+
         <div className="mo-hero-inner">
           {guest && (
             <p className={cn("mo-pill", fade("mo-pill-fx"))}>
@@ -292,9 +343,9 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
           <p className={cn("mo-kicker", fade("mo-kicker-fx"))}>{t.weInviteYou}</p>
 
           <h1 ref={nameRef} className="mo-name">
-            <SplitName key={`g-${language}`} text={groom} start={4} on={animOn} swap={introDone} />
+            <SplitName key={`g-${language}-${heroRun}`} text={groom} start={4} on={animOn} swap={introDone} />
             <span className={cn("mo-amp", fade("animate-fade-in-up delay-1000"))}>{amp}</span>
-            <SplitName key={`b-${language}`} text={bride} start={groom.length + 10} on={animOn} swap={introDone} />
+            <SplitName key={`b-${language}-${heroRun}`} text={bride} start={groom.length + 10} on={animOn} swap={introDone} />
           </h1>
         </div>
 
