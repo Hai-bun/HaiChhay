@@ -3998,12 +3998,12 @@ html[data-names-color] .mo-hero .mo-pill { color: var(--user-names); -webkit-tex
 .reveal-ready .location-section.is-visible .loc-tagline { animation: ent-blur 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.65s backwards; }
 .reveal-ready .location-section.is-visible .loc-heart svg { animation: ent-pop 0.8s cubic-bezier(0.2, 0.9, 0.3, 1.6) 0.9s backwards, ent-beat 1.8s ease-in-out 1.8s infinite; }
 .reveal-ready .location-section.is-visible .lf-photo { animation: ent-wipe-right 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s backwards; }
-.reveal-ready .location-section.is-visible .lf-photo img { animation: ent-settle 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s backwards; }
+.reveal-ready .location-section.is-visible .lf-photo img { animation: ent-settle 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s backwards, inv-zoom 16s ease-in-out infinite alternate; }
 .reveal-ready .location-section.is-visible .lf-icon { animation: ent-pop-spin 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.5) 0.85s backwards; }
 .reveal-ready .location-section.is-visible .lf-info-text > * { animation: ent-blur 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 1s backwards; }
 .reveal-ready .location-section.is-visible .lf-info-text > :nth-child(2) { animation-delay: 1.15s; }
 .reveal-ready .location-section.is-visible .lf-map { animation: ent-wipe-up 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.8s backwards; }
-.reveal-ready .location-section.is-visible .lf-pin { animation: ent-drop 0.9s cubic-bezier(0.3, 1.6, 0.5, 1) 1.5s backwards; }
+.reveal-ready .location-section.is-visible .lf-pin { animation: ent-drop 0.9s cubic-bezier(0.3, 1.6, 0.5, 1) 1.5s backwards, loc-bounce 2.2s ease-in-out 2.4s infinite; }
 .reveal-ready .location-section.is-visible .lf-btn { animation: ent-pop 0.8s cubic-bezier(0.2, 0.9, 0.3, 1.5) 1.6s backwards; }
 .reveal-ready .location-section.is-visible .lf-flower { animation: ent-sway 6s ease-in-out infinite alternate; transform-origin: 50% 0; }
 .reveal-ready .location-section.is-visible .lf-flower-br { animation-delay: -3s; transform-origin: 100% 100%; }
@@ -4021,7 +4021,7 @@ html[data-names-color] .mo-hero .mo-pill { color: var(--user-names); -webkit-tex
 
 /* Spotlight slideshow layout: the frame opens from the centre like a curtain, the glow behind it blooms,
    and the photo counter + progress bar rise in last. */
-.reveal-ready .gallery-section.is-visible .sp-border { animation: ent-wipe-center 1.5s cubic-bezier(0.65, 0, 0.25, 1) 0.25s backwards; }
+.reveal-ready .gallery-section.is-visible .sp-border { animation: ent-wipe-center 1.5s cubic-bezier(0.65, 0, 0.25, 1) 0.25s backwards, ring-spin 4.5s linear infinite; }
 .reveal-ready .gallery-section.is-visible .sp-glows { animation: ent-bloom 1.8s ease-out 0.6s backwards; }
 .reveal-ready .gallery-section.is-visible .sp-meta { animation: ent-blur 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 1.4s backwards; }
 
@@ -4045,3 +4045,17 @@ html[data-names-color] .mo-hero .mo-pill { color: var(--user-names); -webkit-tex
   .location-section :is(.loc-orn span, .loc-orn i, .loc-title, .loc-tagline, .loc-heart svg, .lf-photo, .lf-photo img, .lf-icon, .lf-info-text > *, .lf-map, .lf-pin, .lf-btn, .lf-flower),
   .gallery-section :is(.gallery-item img, .sp-border, .sp-glows, .sp-meta) { animation: none !important; }
 }
+
+/* ---------- Photo Gallery (slideshow): focus on the centre ----------
+   Photos are zoomed in so the couple in the middle fills the frame and the sides crop away.
+   Gentle on phones (portrait frame), stronger on wider screens. The slow zoom keeps running. */
+.sp-slide img { transform: scale(1.12); transform-origin: 50% 36%; }
+.sp-slide.is-active img { animation: sp-zoom-focus 9s ease-out forwards; }
+@keyframes sp-zoom-focus { from { transform: scale(1.12); } to { transform: scale(1.2); } }
+/* Web: the frame is a tall portrait card (4:5), centred, instead of the wide 16:10 frame.
+   The blurred glow of the photos still spreads out behind it on both sides. */
+@media (min-width: 768px) {
+  .sp-border { max-width: 30rem; margin: 0 auto; border-radius: 31px; }
+  .sp-stage, html[data-border-color] .sp-stage { aspect-ratio: 4 / 5; border-radius: 28px; }
+}
+@media (prefers-reduced-motion: reduce) { .sp-slide.is-active img { animation: none; } }
