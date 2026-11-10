@@ -74,6 +74,9 @@ export interface Translations {
   markYourCalendar: string;
   saveTheDate: string;
   saveTheDateText: string;
+  addToCalendar: string;
+  addToGoogleCalendar: string;
+  addToAppleCalendar: string;
 
   // Header navigation
   navHome: string;
@@ -172,6 +175,9 @@ const translations: Record<Language, Translations> = {
     markYourCalendar: 'Mark your calendar',
     saveTheDate: 'Save the Date',
     saveTheDateText: "We can't wait to celebrate with you.",
+    addToCalendar: 'Add to calendar',
+    addToGoogleCalendar: 'Google Calendar',
+    addToAppleCalendar: 'Apple Calendar (.ics)',
 
     // Header navigation
     navHome: 'Home',
@@ -268,6 +274,9 @@ const translations: Record<Language, Translations> = {
     markYourCalendar: 'សូមកត់ត្រាទុកថ្ងៃ',
     saveTheDate: 'កត់ចំណាំថ្ងៃនេះទុក',
     saveTheDateText: 'យើងរង់ចាំអបអរសាទរជាមួយលោកអ្នក។',
+    addToCalendar: 'បន្ថែមទៅប្រតិទិន',
+    addToGoogleCalendar: 'Google Calendar',
+    addToAppleCalendar: 'Apple Calendar (.ics)',
 
     // Header navigation
     navHome: 'ទំព័រដើម',

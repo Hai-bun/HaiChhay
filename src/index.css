@@ -2897,6 +2897,14 @@ html:lang(km) .wedding-root .font-script { word-spacing: 0.1em; }
   margin-top: 0; gap: 0.7rem; padding: 0.85rem 1.8rem;
   font-size: clamp(1.05rem, 3.4vw, 1.4rem);
 }
+/* Everything in Save the Date uses the Heading font chosen in Admin. */
+.mo-save :is(.mo-save-title, .mo-save-sub, .mo-date, .mo-date span, .countdown-box span) { font-family: var(--font-serif); }
+.mo-save .mo-date { font-weight: 600; }
+/* Countdown labels: bigger and clean (no fake-bold stroke, which smeared the small Khmer text). */
+.mo-save .countdown-box span:last-child {
+  font-size: clamp(0.85rem, 3.4vw, 1.15rem); font-weight: 400; line-height: 1.3;
+  -webkit-text-stroke: 0; letter-spacing: 0; text-transform: none; white-space: nowrap;
+}
 .mo-save .mo-date svg { width: 1.35em; height: 1.35em; }
 .mo-save-countdown { margin-top: 1.75rem; }
 @media (min-width: 768px) {
@@ -4083,3 +4091,23 @@ html[data-names-color] .mo-hero .mo-pill { color: var(--user-names); -webkit-tex
   50% { filter: drop-shadow(0 0 14px rgba(255, 214, 120, 0.55)); }
 }
 @media (prefers-reduced-motion: reduce) { .reveal-ready .mo-hero .mo-name { animation: none; } }
+
+
+/* ---------- Add to calendar (Save the Date) ---------- */
+.add-cal { position: relative; margin-top: 0.9rem; display: inline-block; }
+.add-cal-btn {
+  display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1.2rem; border-radius: 9999px;
+  border: 1.5px solid #ff6b4a; color: #ff6b4a; background: transparent; font-family: var(--font-serif);
+  font-size: clamp(0.95rem, 3vw, 1.1rem); cursor: pointer; transition: background 0.2s, color 0.2s;
+}
+.add-cal-btn:hover { background: #ff6b4a; color: #fff; }
+.add-cal-menu {
+  position: absolute; left: 0; top: calc(100% + 0.4rem); z-index: 5; min-width: 100%; display: flex; flex-direction: column;
+  background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 14px; overflow: hidden;
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.25);
+}
+.add-cal-menu a, .add-cal-menu button {
+  padding: 0.65rem 1.1rem; text-align: left; white-space: nowrap; font-family: var(--font-serif);
+  font-size: 1rem; color: hsl(var(--foreground)); background: transparent; border: 0; cursor: pointer;
+}
+.add-cal-menu a:hover, .add-cal-menu button:hover { background: hsl(var(--muted)); }

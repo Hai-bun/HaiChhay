@@ -7,6 +7,7 @@ import { getTranslations, type Language } from "@/lib/i18n";
 import { formatWeddingDate, formatWeddingTime, localizeDigits } from "@/lib/weddingFormat";
 import { PolaroidStack } from "../PolaroidStack";
 import { CountdownTimer } from "../CountdownTimer";
+import { AddToCalendar } from "../AddToCalendar";
 import { PhotoGallery } from "../PhotoGallery";
 import { TemplateSections, getCoupleDisplay, type SectionKey } from "./TemplateSections";
 import { getTemplate } from "@/lib/templateConfig";
@@ -380,6 +381,8 @@ export const AuroraInvitation = ({ weddingData, guest, language }: TemplateProps
                 {formatWeddingTime(weddingData.weddingTime, language)}
               </span>
             </div>
+
+            <AddToCalendar weddingData={weddingData} language={language} />
 
             {weddingData.showCountdown && (
               <div className="mo-save-countdown">

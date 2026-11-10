@@ -15,6 +15,23 @@ interface TimeLeft {
   seconds: number;
 }
 
+// Soft pill: tall rounded capsule with a theme-colour gradient; number and label sit inside.
+const TimeBlock = ({ value, label, lang }: { value: number; label: string; lang: Language }) => {
+  const text = localizeDigits(value.toString().padStart(2, "0"), lang);
+  return (
+    <div
+      className="countdown-box flex flex-col items-center justify-center w-[4.25rem] h-28 sm:w-28 sm:h-40 rounded-full border border-primary/30 shadow-card"
+      style={{ background: "linear-gradient(160deg, hsl(var(--primary) / 0.22), hsl(var(--primary) / 0.06) 60%, hsl(var(--card)))" }}
+    >
+      <span className="text-3xl sm:text-5xl leading-none font-serif font-semibold text-foreground tabular-nums">{text}</span>
+      <span className="my-2 sm:my-3 h-1.5 w-1.5 rounded-full bg-primary" aria-hidden="true" />
+      <span className={`text-[0.65rem] sm:text-sm text-muted-foreground ${lang === "km" ? "" : "uppercase tracking-widest"}`}>
+        {label}
+      </span>
+    </div>
+  );
+};
+
 export const CountdownTimer = ({ targetDate, targetTime, language }: CountdownTimerProps) => {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const lang = language || getStoredLanguage();
@@ -41,26 +58,12 @@ export const CountdownTimer = ({ targetDate, targetTime, language }: CountdownTi
     return () => clearInterval(timer);
   }, [targetDate, targetTime]);
 
-  // `tick`: this digit animates on every change (seconds only; the block remounts each second).
-  const TimeBlock = ({ value, label, tick }: { value: number; label: string; tick?: boolean }) => (
-    <div className="flex flex-col items-center">
-      <div className="countdown-box w-16 h-16 sm:w-20 sm:h-20 bg-card rounded-lg shadow-card flex items-center justify-center border border-border">
-        <span className={`text-2xl sm:text-3xl font-serif font-semibold text-foreground${tick ? " countdown-tick" : ""}`}>
-          {localizeDigits(value.toString().padStart(2, '0'), lang)}
-        </span>
-      </div>
-      <span className={`mt-2 text-xs sm:text-sm text-muted-foreground ${lang === "km" ? "" : "uppercase tracking-widest"}`}>
-        {label}
-      </span>
-    </div>
-  );
-
   return (
-    <div className="flex justify-center gap-3 sm:gap-6">
-      <TimeBlock value={timeLeft.days} label={t.days} />
-      <TimeBlock value={timeLeft.hours} label={t.hours} />
-      <TimeBlock value={timeLeft.minutes} label={t.minutes} />
-      <TimeBlock value={timeLeft.seconds} label={t.seconds} tick />
+    <div className="flex justify-center gap-2 sm:gap-5">
+      <TimeBlock value={timeLeft.days} label={t.days} lang={lang} />
+      <TimeBlock value={timeLeft.hours} label={t.hours} lang={lang} />
+      <TimeBlock value={timeLeft.minutes} label={t.minutes} lang={lang} />
+      <TimeBlock value={timeLeft.seconds} label={t.seconds} lang={lang} />
     </div>
   );
 };
