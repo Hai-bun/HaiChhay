@@ -22,7 +22,12 @@ export const AddToCalendar = ({ weddingData, language }: { weddingData: WeddingD
   if (!event) return null;
 
   const platform = detectPlatform();
-  const google = () => window.open(googleCalendarUrl(event), "_blank", "noopener,noreferrer");
+  // On Android a same-tab link lets the Calendar app claim the URL and open the new-event screen;
+  // a new tab can land on the plain month view instead. Desktop keeps the new tab.
+  const google = () =>
+    platform === "android"
+      ? window.location.assign(googleCalendarUrl(event))
+      : window.open(googleCalendarUrl(event), "_blank", "noopener,noreferrer");
   const apple = () => downloadIcs(event);
 
   // Phones get their own calendar straight away; desktop gets a small choice.
